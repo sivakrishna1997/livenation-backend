@@ -1,0 +1,61 @@
+ngb-datepicker {
+  &.dropdown-menu {
+    border-radius: $br;
+    border-color: $borderColor;
+  }
+
+  ngb-datepicker-navigation {
+    ngb-datepicker-navigation-select {
+      gap: .5rem;
+
+      .custom-select {
+        background-image: $selectArrow;
+        background-position: right center;
+        background-repeat: no-repeat;
+        appearance: none;
+        border-radius: $br;
+        border-color: lighten($dark, 70);
+        background-color: lighten($dark, 70);
+      }
+    }
+  }
+
+  .ngb-dp-content {
+    .ngb-dp-weekdays {
+      border-color: rgba($dark, .05);
+    }
+
+    .ngb-dp-today {
+      .btn-light {
+        background-color: rgba($primary, .1);
+      }
+    }
+
+    .ngb-dp-week-number,
+    .ngb-dp-weekday {
+      font-style: normal;
+      font-weight: 600;
+      text-transform: uppercase;
+      color: lighten($dark, 30);
+      font-size: .75rem;
+    }
+
+    .ngb-dp-day,
+    .ngb-dp-week-number,
+    .ngb-dp-weekday {
+      width: 2.5rem;
+      height: 2.5rem;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+
+      .btn-light {
+        &:not(.text-muted) {
+          color: lighten($dark, 10);
+          font-weight: 500;
+        }
+      }
+    }
+  }
+
+}
