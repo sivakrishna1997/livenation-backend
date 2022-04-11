@@ -8,6 +8,7 @@ $warning:#FFD700;
 $danger:#F0142F;
 $light:#f8f9fa;
 $white:#ffffff;
+$dark-gray:#828282;
 $dark:#1A1A1A;
 
 $dusty-blue:#527DBE;
@@ -56,6 +57,7 @@ $theme-colors: ("primary": $primary,
   "linkedin": $linkedin,
   "instagram": $instagram,
   // Custom
+  "dark-gray": $dark-gray,
   "dusty-blue": $dusty-blue,
 
 );

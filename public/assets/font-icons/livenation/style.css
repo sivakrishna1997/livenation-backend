@@ -1,10 +1,10 @@
 @font-face {
   font-family: 'livenation';
-  src:  url('fonts/livenation.eot?q68w9');
-  src:  url('fonts/livenation.eot?q68w9#iefix') format('embedded-opentype'),
-    url('fonts/livenation.ttf?q68w9') format('truetype'),
-    url('fonts/livenation.woff?q68w9') format('woff'),
-    url('fonts/livenation.svg?q68w9#livenation') format('svg');
+  src:  url('fonts/livenation.eot?jta54m');
+  src:  url('fonts/livenation.eot?jta54m#iefix') format('embedded-opentype'),
+    url('fonts/livenation.ttf?jta54m') format('truetype'),
+    url('fonts/livenation.woff?jta54m') format('woff'),
+    url('fonts/livenation.svg?jta54m#livenation') format('svg');
   font-weight: normal;
   font-style: normal;
   font-display: block;
@@ -25,6 +25,9 @@
   -moz-osx-font-smoothing: grayscale;
 }
 
+.fi-library:before {
+  content: "\ea42";
+}
 .fi-ln-building:before {
   content: "\ea36";
 }

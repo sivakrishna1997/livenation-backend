@@ -1,0 +1,44 @@
+.modal {
+  .modal-content {
+    border: none;
+    border-radius: $br;
+
+    .modal-header {
+      border-bottom: 5px solid $primary;
+
+      .modal-title {
+        font-size: 2rem;
+        font-weight: 600;
+        color: $dark;
+      }
+
+      .btn-close {
+        opacity: .2;
+      }
+    }
+
+    .modal-body {}
+
+    .modal-footer {}
+
+    @media (min-width:992px) {
+      .modal-header {
+        padding: 1.75rem 3.5rem;
+      }
+
+      .modal-body {}
+
+      .modal-footer {}
+    }
+
+
+  }
+}
+
+.modal-backdrop {
+  background: $black;
+
+  &.show {
+    opacity: .6;
+  }
+}

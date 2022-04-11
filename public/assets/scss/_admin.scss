@@ -72,12 +72,59 @@
 
   }
 
+
   .form-control {
     font-size: 1.25rem;
     min-height: 3.75rem;
     padding: .75rem 1.5rem;
     border-radius: $br;
     border-color: $borderColor;
+  }
+  .subtitle-container{
+    hr{
+      margin-top: 0;
+      margin-bottom: 2.5rem;
+    }
+  }
+
+  .input-group {
+    font-size: 1.25rem;
+    min-height: 3.75rem;
+    border-radius: $br;
+    border: 1px solid $borderColor;
+    background: $white;
+    position: relative;
+
+    .input-group-text {
+      background: none;
+      border: none;
+      position: absolute;
+      width: 3.75rem;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      right: 0;
+      top: 0;
+      bottom: 0;
+      font-size: 1.25rem;
+      color: $tcolor;
+    }
+
+    .form-control {
+      background: none;
+      border: none;
+      padding-right: 3.75rem;
+      position: relative;
+      z-index: 2;
+
+      &[type="file"] {
+        &::-webkit-file-upload-button {
+          visibility: hidden;
+          width: 0;
+          display: none;
+        }
+      }
+    }
   }
 
   .btn-add-more {
@@ -128,8 +175,9 @@
   }
 }
 
-.add-more-area{
+.add-more-area {
   margin-bottom: 1.25rem;
+
   .btn {
     min-height: 40px;
     border-radius: $br;
