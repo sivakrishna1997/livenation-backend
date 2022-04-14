@@ -1,13 +1,13 @@
 import * as mongoose from 'mongoose';
 
-export const user = mongoose.model('user', new mongoose.Schema({
-    firstname: { type: String },
-    lastname: { type: String },
-    username: { type: String },
-    email: { type: String, required: true, unique: true },
-    password: { type: String },
-    mobile: { type: String },
-    // role: { type: Number, required: true, enum: [1, 2, 3], default: 2 }, // 1 for admin , 2 for user, 3 for third party
+export const user = mongoose.model('users', new mongoose.Schema({
+    firstname: { type: String, trim: true },
+    lastname: { type: String, trim: true },
+    username: { type: String, required: true, unique: true, trim: true },
+    email: { type: String, required: true, unique: true, trim: true },
+    password: { type: String, trim: true },
+    mobile: { type: String, unique: true, trim: true },
+    role: { type: Number, required: true, enum: [1, 2, 3], default: 2 }, // 1 for admin , 2 for user, 3 for third party
     terms_conditions: { type: Boolean, default: false },
     provider: { type: String, default: '' },
     photo_url: { type: String },

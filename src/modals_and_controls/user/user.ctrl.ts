@@ -132,6 +132,7 @@ const getuser = (req: Request, res: Response) => {
         params.username ? query['username'] = params.username : null;
         params.mobile ? query['mobile'] = params.mobile : null;
         params._id ? query['_id'] = new ObjectId(`${params._id}`) : null;
+        params.role ? query['role'] = params.role : null;
 
         user.findOne(query, { password: 0 }).then(
             (doc: any) => {
@@ -150,10 +151,7 @@ const getuser = (req: Request, res: Response) => {
 
 const getallusers = (req: Request, res: Response) => {
     try {
-        var query = {
-            // role: 2
-        }
-        user.find(query, { password: 0 }).then(
+        user.find({}, { password: 0 }).then(
             (doc: any) => {
                 if (doc) {
                     success(req, res, "User Details", doc);
@@ -172,16 +170,15 @@ const getallusers = (req: Request, res: Response) => {
 const deleteuser = (req: Request, res: Response) => {
     try {
         let params = req.body;
-        let query: any = {};
-        params.email ? query['email'] = params.email : null;
-        params._id ? query['_id'] = new ObjectId(`${params._id}`) : null;
-
-        user.deleteOne(query).then(
+        let query: any = {
+            _id: new ObjectId(`${params._id}`)
+        };
+        user.findOneAndDelete(query).then(
             (doc: any) => {
-                if (doc.n == 0) {
-                    error(req, res, "User deleting failed", "");
+                if (!doc) {
+                    error(req, res, "User dose't exist!", "");
                 } else {
-                    success(req, res, "User deleted successfully", {});
+                    success(req, res, "User deleted successfully!", {});
                 }
             }, err => {
                 error(req, res, '', err)
@@ -195,7 +192,7 @@ const deleteuser = (req: Request, res: Response) => {
 const updatepassword = async (req: Request, res: Response) => {
     try {
         let params = req.body;
-        let query = { email: params.email }
+        let query = { _id: params._id }
         user.findOne(query).then(
             async (doc: any) => {
                 if (doc) {
@@ -209,9 +206,9 @@ const updatepassword = async (req: Request, res: Response) => {
                         .then(
                             (udoc: any) => {
                                 if (udoc.n == 0) {
-                                    error(req, res, "Password updating failed ", "");
+                                    error(req, res, "Password updating failed!", "");
                                 } else {
-                                    success(req, res, "Password updated successfully", userformatter(udoc));
+                                    success(req, res, "Password updated successfully!", {});
                                 }
                             }, err => {
                                 error(req, res, '', err);
@@ -229,12 +226,52 @@ const updatepassword = async (req: Request, res: Response) => {
     }
 }
 
+
+
+const updateuser = async (req: Request, res: Response) => {
+    try {
+        let params = req.body;
+        let query = { _id: params._id }
+        let setQuery: any = {};
+
+        params.firstname ? setQuery['firstname'] = params.firstname : null;
+        params.lastname ? setQuery['lastname'] = params.lastname : null;
+        params.username ? setQuery['username'] = params.username : null;
+        params.mobile ? setQuery['mobile'] = params.mobile : null;
+        params.provider ? setQuery['provider'] = params.provider : null;
+        params.uid ? setQuery['uid'] = params.uid : null;
+        params.photo_url ? setQuery['photo_url'] = params.photo_url : null;
+        params.active ? setQuery['active'] = true : setQuery['active'] = false;
+        setQuery['udate'] = Date.now();
+
+        user.findOneAndUpdate(query, { $set: setQuery }).then(
+            async (doc: any) => {
+                if (!doc) {
+                    error(req, res, "User updating failed!", "");
+                } else {
+                    user.findOne(query).then(
+                        (udoc: any) => {
+                            success(req, res, "User updated successfully!", userformatter(udoc));
+                        }, err => {
+                            error(req, res, '', err)
+                        })
+                }
+            }, err => {
+                error(req, res, '', err)
+            })
+    } catch (err) {
+        error(req, res, '', err)
+    }
+}
+
+
 export default {
     adduser,
     userlogin,
     getuser,
     getallusers,
     deleteuser,
+    updateuser,
     updatepassword,
     checkUserExistAndSaveAndGetUserWithToken
 };
