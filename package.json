@@ -16,14 +16,19 @@
   "license": "ISC",
   "dependencies": {
     "@types/mongoose": "^5.11.97",
+    "@types/express-fileupload": "^1.2.2",
     "bcryptjs": "^2.4.3",
     "cors": "^2.8.5",
+    "cloudinary": "^1.27.0",
     "dotenv": "^10.0.0",
     "express": "^4.17.2",
+    "express-fileupload": "^1.2.1",
     "helmet": "^5.0.1",
     "jsonwebtoken": "^8.5.1",
     "mongoose": "^6.1.5",
     "payumoney-pay": "^2.1.1",
+    "passport": "^0.4.1",
+    "passport-jwt": "^4.0.0",
     "uuid": "^8.3.2"
   },
   "devDependencies": {
