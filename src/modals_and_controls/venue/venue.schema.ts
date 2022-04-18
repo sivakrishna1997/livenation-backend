@@ -1,13 +1,14 @@
 import * as mongoose from 'mongoose';
 
 export const venues = mongoose.model('venues', new mongoose.Schema({
-    name: { type: String, required: true, trim: true },
-    location: { type: String },
+    name: { type: String, required: true, trim: true, index: true },
+    location: { type: String, index: true },
     capacity: { type: String },
     stage_layout: { type: String },
     stages: [
         {
-            stage_id: { type: String }
+            stage_id: { type: String },
+            stage_name: { type: String }
         }
     ],
     seats: [
@@ -16,7 +17,6 @@ export const venues = mongoose.model('venues', new mongoose.Schema({
             image: { type: String }
         }
     ],
-    active: { type: Boolean, default: true },
     cdate: { type: Date },
     udate: { type: Date }
 })
@@ -25,7 +25,6 @@ export const venues = mongoose.model('venues', new mongoose.Schema({
 
 export const stages = mongoose.model('stages', new mongoose.Schema({
     name: { type: String, required: true, trim: true },
-    active: { type: Boolean, default: true },
     cdate: { type: Date },
     udate: { type: Date }
 })

@@ -1,7 +1,7 @@
 import * as mongoose from 'mongoose';
 
 export const events = mongoose.model('events', new mongoose.Schema({
-    concert_title: { type: String, required: true, trim: true },
+    concert_title: { type: String, required: true, trim: true, index: true },
     concert_type: { type: String, required: true, trim: true },
     main_artist: { type: String, required: true },
     capacity: { type: String },
@@ -31,7 +31,6 @@ export const events = mongoose.model('events', new mongoose.Schema({
         description: { type: String }
     },
     status: { type: String, enum: ['pending', 'approved', 'rejected'], default: 'pending' },
-    active: { type: Boolean, default: true },
     cdate: { type: Date },
     udate: { type: Date }
 })

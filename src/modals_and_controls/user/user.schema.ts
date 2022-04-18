@@ -1,9 +1,9 @@
 import * as mongoose from 'mongoose';
 
 export const user = mongoose.model('users', new mongoose.Schema({
-    firstname: { type: String, trim: true },
-    lastname: { type: String, trim: true },
-    username: { type: String, required: true, unique: true, trim: true },
+    firstname: { type: String, trim: true, index: true },
+    lastname: { type: String, trim: true, index: true },
+    username: { type: String, required: true, unique: true, trim: true, index: true },
     email: { type: String, required: true, unique: true, trim: true },
     password: { type: String, trim: true },
     mobile: { type: String, unique: true, trim: true },

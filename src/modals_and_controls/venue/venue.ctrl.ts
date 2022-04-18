@@ -70,7 +70,6 @@ const updatevenues = async (req: Request, res: Response) => {
         params.stage_layout ? setQuery['stage_layout'] = params.stage_layout : null;
         params.seats ? setQuery['seats'] = params.seats : null;
         params.stages ? setQuery['stages'] = params.stages : null;
-        params.active ? setQuery['active'] = true : setQuery['active'] = false;
         setQuery['udate'] = Date.now();
 
         venues.findOneAndUpdate(
@@ -85,7 +84,7 @@ const updatevenues = async (req: Request, res: Response) => {
                 if (!udoc) {
                     error(req, res, "Venue doesn't exists!", null);
                 } else {
-                    success(req, res, "Venue updated successfully!", udoc);
+                    success(req, res, "Venue updated successfully!", {});
                 }
             }, err => {
                 error(req, res, '', err);
@@ -123,11 +122,11 @@ const addvenuestages = async (req: Request, res: Response) => {
         let params = req.body;
         let query: any = {
             _id: new ObjectId(`${params._id}`),
-            active: true,
         }
 
         let stage = {
-            stage_id: params.stage_id
+            stage_id: params.stage_id,
+            stage_name: params.stage_name,
         }
         venues.findOneAndUpdate(query, { $push: { stages: stage } })
             .then(
@@ -156,7 +155,6 @@ const deletevenuestages = (req: Request, res: Response) => {
         let params = req.body;
         let query: any = {
             _id: new ObjectId(`${params._id}`),
-            active: true,
         }
 
         let stage = {
@@ -190,7 +188,6 @@ const addvenueseats = async (req: Request, res: Response) => {
         let params = req.body;
         let query: any = {
             _id: new ObjectId(`${params._id}`),
-            active: true,
         }
 
         let seat: any = {}
@@ -223,7 +220,6 @@ const deletevenueseats = (req: Request, res: Response) => {
         let params = req.body;
         let query: any = {
             _id: new ObjectId(`${params._id}`),
-            active: true,
         }
 
         let seat = {
@@ -319,7 +315,6 @@ const updatestages = async (req: Request, res: Response) => {
         let setQuery: any = {};
 
         params.name ? setQuery['name'] = params.name : null;
-        params.active ? setQuery['active'] = true : setQuery['active'] = false;
         setQuery['udate'] = Date.now();
 
         stages.findOneAndUpdate(

@@ -9,7 +9,6 @@ import uploadCtrl from './service/cloudinary.service';
 // import imageCtrl from './app/images/images/images';
 // import carousalcrtl from './app/images/carousal/carousalcontroller';
 
-
 routes.use('/getimageurl', uploadCtrl.uploadandgeturl);
 
 // routes.use('/image', uploadCtrl.uploadimage, imageCtrl.addimage);

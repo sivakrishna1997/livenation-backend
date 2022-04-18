@@ -63,7 +63,18 @@ const updateartist = async (req: Request, res: Response) => {
 
         params.name ? setQuery['name'] = params.name : null;
         params.description ? setQuery['description'] = params.description : null;
-        params.active ? setQuery['active'] = true : setQuery['active'] = false;
+        params.photo_url ? setQuery['photo_url'] = params.photo_url : null;
+
+        params.social_media?.facebook ? setQuery['social_media.facebook'] = params.social_media.facebook : null;
+        params.social_media?.twitter ? setQuery['social_media.twitter'] = params.social_media.twitter : null;
+        params.social_media?.instagram ? setQuery['social_media.instagram'] = params.social_media.instagram : null;
+        params.social_media?.youtube ? setQuery['social_media.youtube'] = params.social_media.youtube : null;
+        params.social_media?.soundcloud ? setQuery['social_media.soundcloud'] = params.social_media.soundcloud : null;
+        params.social_media?.bandcamp ? setQuery['social_media.bandcamp'] = params.social_media.bandcamp : null;
+        params.social_media?.spotify ? setQuery['social_media.spotify'] = params.social_media.spotify : null;
+        params.social_media?.tumblr ? setQuery['social_media.tumblr'] = params.social_media.tumblr : null;
+        params.social_media?.musicradar ? setQuery['social_media.musicradar'] = params.social_media.musicradar : null;
+
         setQuery['udate'] = Date.now();
 
         artist.findOneAndUpdate(
@@ -78,7 +89,7 @@ const updateartist = async (req: Request, res: Response) => {
                 if (!udoc) {
                     error(req, res, "Artist doesn't exists!", null);
                 } else {
-                    success(req, res, "Artist updated successfully!", udoc);
+                    success(req, res, "Artist updated successfully!", {});
                 }
             }, err => {
                 error(req, res, '', err);

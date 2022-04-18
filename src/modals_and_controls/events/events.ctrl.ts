@@ -77,7 +77,6 @@ const updateevent = async (req: Request, res: Response) => {
         params.performers ? setQuery['performers'] = params.performers : null;
         params.venues ? setQuery['venues'] = params.venues : null;
         params.additional_info ? setQuery['additional_info'] = params.additional_info : null;
-        params.active ? setQuery['active'] = true : setQuery['active'] = false;
         setQuery['udate'] = Date.now();
 
         events.findOneAndUpdate(
@@ -92,7 +91,7 @@ const updateevent = async (req: Request, res: Response) => {
                 if (!udoc) {
                     error(req, res, "Concert doesn't exists!", null);
                 } else {
-                    success(req, res, "Concert updated successfully!", udoc);
+                    success(req, res, "Concert updated successfully!", {});
                 }
             }, err => {
                 error(req, res, '', err);
