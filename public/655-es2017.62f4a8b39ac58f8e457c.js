@@ -1,0 +1,1 @@
+(self.webpackChunklive_nation=self.webpackChunklive_nation||[]).push([[655],{2655:function(n,e,t){"use strict";t.r(e),t.d(e,{LivenationModule:function(){return c}});var i=t(1116),u=t(328),o=t(6732),r=t(5366);let c=(()=>{class n{}return n.\u0275fac=function(e){return new(e||n)},n.\u0275mod=r.oAB({type:n}),n.\u0275inj=r.cJS({imports:[[i.ez,u.E,o.P]]}),n})()}}]);
