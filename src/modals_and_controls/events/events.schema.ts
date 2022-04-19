@@ -26,10 +26,12 @@ export const events = mongoose.model('events', new mongoose.Schema({
             venue_name: { type: String }
         }
     ],
-    additional_info: {
-        title: { type: String },
-        description: { type: String }
-    },
+    additional_info: [
+        {
+            title: { type: String },
+            description: { type: String }
+        }
+    ],
     status: { type: String, enum: ['pending', 'approved', 'rejected'], default: 'pending' },
     cdate: { type: Date },
     udate: { type: Date }
