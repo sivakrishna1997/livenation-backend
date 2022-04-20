@@ -7,7 +7,10 @@ export const user = mongoose.model('users', new mongoose.Schema({
     email: { type: String, required: true, unique: true, trim: true },
     password: { type: String, trim: true },
     mobile: { type: String, unique: true, trim: true },
-    role: { type: Number, required: true, enum: [1, 2, 3], default: 2 }, // 1 for admin , 2 for user, 3 for third party
+    gender: { type: String, enum: ['male', 'female', 'others'] },
+    dob: { type: Date },
+    country: { type: String },
+    role: { type: Number, required: true, enum: [1, 2, 3], default: 2 }, // 1 for super admin, 2 for user, 3 second admin
     terms_conditions: { type: Boolean, default: false },
     provider: { type: String, default: '' },
     photo_url: { type: String },

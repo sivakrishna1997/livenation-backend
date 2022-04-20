@@ -132,8 +132,6 @@ const getuser = (req: Request, res: Response) => {
         params.username ? query['username'] = params.username : null;
         params.mobile ? query['mobile'] = params.mobile : null;
         params._id ? query['_id'] = new ObjectId(`${params._id}`) : null;
-        params.role ? query['role'] = params.role : null;
-
         user.findOne(query, { password: 0 }).then(
             (doc: any) => {
                 if (doc) {
@@ -238,6 +236,9 @@ const updateuser = async (req: Request, res: Response) => {
         params.lastname ? setQuery['lastname'] = params.lastname : null;
         params.username ? setQuery['username'] = params.username : null;
         params.mobile ? setQuery['mobile'] = params.mobile : null;
+        params.gender ? setQuery['gender'] = params.gender : null;
+        params.dob ? setQuery['dob'] = params.dob : null;
+        params.country ? setQuery['country'] = params.country : null;
         params.provider ? setQuery['provider'] = params.provider : null;
         params.uid ? setQuery['uid'] = params.uid : null;
         params.photo_url ? setQuery['photo_url'] = params.photo_url : null;
