@@ -1,6 +1,6 @@
 import { tickets } from './tickets.schema';
 import { Request, Response } from "express";
-import { success, error } from '../../service/response.service';
+import { success, error } from '../../../service/response.service';
 import { ObjectId } from 'mongodb';
 
 
@@ -24,7 +24,6 @@ const addticket = async (req: Request, res: Response) => {
         error(req, res, '', err)
     }
 }
-
 
 
 const gettickets = (req: Request, res: Response) => {

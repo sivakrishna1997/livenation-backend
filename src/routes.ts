@@ -6,7 +6,7 @@ import artistroutes from './modals_and_controls/artist/artist.router';
 import genreroutes from './modals_and_controls/genre/genre.router';
 import { venueroot, stageroot } from './modals_and_controls/venue/venue.router';
 import eventsroutes from './modals_and_controls/events/events.router';
-import ticketsroutes from './modals_and_controls/tickets/tickets.router';
+import ticketsroutes from './modals_and_controls/events/tickets/tickets.router';
 
 // const passport = require("passport")
 // const authenticate = passport.authenticate('jwt', { session: false })

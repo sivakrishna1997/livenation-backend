@@ -16,6 +16,7 @@ export const user = mongoose.model('users', new mongoose.Schema({
     photo_url: { type: String },
     uid: { type: String },
     email_verified: { type: Boolean, default: false },
+    preferred_genres: [{ name: { type: String } }],
     active: { type: Boolean, default: true },
     cdate: { type: Date },
     udate: { type: Date }

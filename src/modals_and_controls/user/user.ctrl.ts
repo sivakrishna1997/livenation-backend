@@ -190,7 +190,7 @@ const deleteuser = (req: Request, res: Response) => {
 const updatepassword = async (req: Request, res: Response) => {
     try {
         let params = req.body;
-        let query = { _id: params._id }
+        let query = { _id: new ObjectId(`${params._id}`) }
         user.findOne(query).then(
             async (doc: any) => {
                 if (doc) {
@@ -229,7 +229,7 @@ const updatepassword = async (req: Request, res: Response) => {
 const updateuser = async (req: Request, res: Response) => {
     try {
         let params = req.body;
-        let query = { _id: params._id }
+        let query = { _id: new ObjectId(`${params._id}`) }
         let setQuery: any = {};
 
         params.firstname ? setQuery['firstname'] = params.firstname : null;
@@ -242,6 +242,7 @@ const updateuser = async (req: Request, res: Response) => {
         params.provider ? setQuery['provider'] = params.provider : null;
         params.uid ? setQuery['uid'] = params.uid : null;
         params.photo_url ? setQuery['photo_url'] = params.photo_url : null;
+        params.preferred_genres ? setQuery['preferred_genres'] = params.preferred_genres : null;
         params.active ? setQuery['active'] = true : setQuery['active'] = false;
         setQuery['udate'] = Date.now();
 

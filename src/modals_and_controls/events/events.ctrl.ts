@@ -2,6 +2,8 @@ import { events } from './events.schema';
 import { Request, Response } from "express";
 import { success, error } from '../../service/response.service';
 import { ObjectId } from 'mongodb';
+import { user } from '../user/user.schema';
+
 
 
 const addevent = async (req: Request, res: Response) => {
@@ -72,7 +74,7 @@ const updateevent = async (req: Request, res: Response) => {
         params.genre ? setQuery['genre'] = params.genre : null;
         params.start_date ? setQuery['start_date'] = params.start_date : null;
         params.end_date ? setQuery['end_date'] = params.end_date : null;
-        params.graph_content ? setQuery['graph_content'] = params.graph_content : null;
+        params.graphic_content ? setQuery['graphic_content'] = params.graphic_content : null;
         params.about ? setQuery['about'] = params.about : null;
         params.performers ? setQuery['performers'] = params.performers : null;
         params.venues ? setQuery['venues'] = params.venues : null;
@@ -122,10 +124,64 @@ const deleteevent = (req: Request, res: Response) => {
     }
 }
 
+const geteventsforyou = (req: Request, res: Response) => {
+    try {
+        let params = req.body;
+        params.current_date = new Date();
+
+        user.findOne({ _id: new ObjectId(`${params.user_id}`) }).then(
+            (userDoc: any) => {
+                if (!userDoc) {
+                    error(req, res, "User doesn't exists!", "");
+                } else {
+                    let eventQuery: any = {};
+
+                    if (userDoc.preferred_genres.length > 0) {
+                        let genres_names: any = [];
+                        userDoc.preferred_genres.map((genre: any) => {
+                            genres_names.push(genre.name);
+                        })
+
+                        eventQuery['genre'] = { $in: genres_names };
+                    }
+
+                    // eventQuery['start_date'] = { $gte: new Date(params.current_date) };
+                    eventQuery['end_date'] = { $gte: new Date(params.current_date) };
+
+                    console.log("eventQuery::::", eventQuery);
+                    let required_fields: any = { _id: 1, concert_title: 1, start_date: 1, end_date: 1, concert_type: 1, genre: 1, graph_content: 1 }
+                    events.find(eventQuery, required_fields).sort('start_date').then(
+                        (doc: any) => {
+                            if (!doc) {
+                                error(req, res, "No events found!", "");
+                            } else {
+                                success(req, res, "Events found!", doc);
+                            }
+                        }, err => {
+                            error(req, res, '', err)
+                        })
+                }
+
+
+            }, err => {
+                error(req, res, '', err)
+            }
+        )
+
+    } catch (err) {
+        error(req, res, '', err)
+    }
+}
+
+
+
+
+
 export default {
     addevent,
     getevents,
     updateevent,
     deleteevent,
+    geteventsforyou
 };
 

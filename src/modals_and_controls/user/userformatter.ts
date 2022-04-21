@@ -17,6 +17,7 @@ export const userformatter = (user: any) => {
         photo_url: user.photo_url ? user.photo_url : null,
         uid: user.uid ? user.uid : null,
         email_verified: user.email_verified,
+        preferred_genres: user.preferred_genres ? user.preferred_genres : [],
         active: user.active,
         cdate: user.cdate ? user.cdate : null,
         udate: user.udate ? user.udate : null,

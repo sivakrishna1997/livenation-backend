@@ -25,12 +25,20 @@ Object.defineProperty(exports, "__esModule", { value: true });
 const express = __importStar(require("express"));
 const router = express.Router();
 const user_router_1 = __importDefault(require("./modals_and_controls/user/user.router"));
-const teams_router_1 = __importDefault(require("./modals_and_controls/teams/teams.router"));
+const artist_router_1 = __importDefault(require("./modals_and_controls/artist/artist.router"));
+const genre_router_1 = __importDefault(require("./modals_and_controls/genre/genre.router"));
+const venue_router_1 = require("./modals_and_controls/venue/venue.router");
+const events_router_1 = __importDefault(require("./modals_and_controls/events/events.router"));
+const tickets_router_1 = __importDefault(require("./modals_and_controls/events/tickets/tickets.router"));
 // const passport = require("passport")
 // const authenticate = passport.authenticate('jwt', { session: false })
 router.use('/user', user_router_1.default);
-router.use("/teams", teams_router_1.default);
-// router.use('/payment', paymentroutes);
+router.use('/artist', artist_router_1.default);
+router.use('/genres', genre_router_1.default);
+router.use('/venues', venue_router_1.venueroot);
+router.use('/stages', venue_router_1.stageroot);
+router.use('/events', events_router_1.default);
+router.use('/tickets', tickets_router_1.default);
 // routes.use('/material', authenticate, materialrouts);
 exports.default = router;
 //# sourceMappingURL=routes.js.map

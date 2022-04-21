@@ -148,10 +148,7 @@ const getuser = (req, res) => {
 };
 const getallusers = (req, res) => {
     try {
-        var query = {
-        // role: 2
-        };
-        user_schema_1.user.find(query, { password: 0 }).then((doc) => {
+        user_schema_1.user.find({}, { password: 0 }).then((doc) => {
             if (doc) {
                 (0, response_service_1.success)(req, res, "User Details", doc);
             }
@@ -169,15 +166,15 @@ const getallusers = (req, res) => {
 const deleteuser = (req, res) => {
     try {
         let params = req.body;
-        let query = {};
-        params.email ? query['email'] = params.email : null;
-        params._id ? query['_id'] = new mongodb_1.ObjectId(`${params._id}`) : null;
-        user_schema_1.user.deleteOne(query).then((doc) => {
-            if (doc.n == 0) {
-                (0, response_service_1.error)(req, res, "User deleting failed", "");
+        let query = {
+            _id: new mongodb_1.ObjectId(`${params._id}`)
+        };
+        user_schema_1.user.findOneAndDelete(query).then((doc) => {
+            if (!doc) {
+                (0, response_service_1.error)(req, res, "User dose't exist!", "");
             }
             else {
-                (0, response_service_1.success)(req, res, "User deleted successfully", {});
+                (0, response_service_1.success)(req, res, "User deleted successfully!", {});
             }
         }, err => {
             (0, response_service_1.error)(req, res, '', err);
@@ -190,7 +187,7 @@ const deleteuser = (req, res) => {
 const updatepassword = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
     try {
         let params = req.body;
-        let query = { email: params.email };
+        let query = { _id: new mongodb_1.ObjectId(`${params._id}`) };
         user_schema_1.user.findOne(query).then((doc) => __awaiter(void 0, void 0, void 0, function* () {
             if (doc) {
                 let passwordMatch = yield common_service_1.default.comparePassword(req.body.password, doc.password);
@@ -202,10 +199,10 @@ const updatepassword = (req, res) => __awaiter(void 0, void 0, void 0, function*
                 user_schema_1.user.findOneAndUpdate(query, { $set: { password: params.password } })
                     .then((udoc) => {
                     if (udoc.n == 0) {
-                        (0, response_service_1.error)(req, res, "Password updating failed ", "");
+                        (0, response_service_1.error)(req, res, "Password updating failed!", "");
                     }
                     else {
-                        (0, response_service_1.success)(req, res, "Password updated successfully", (0, userformatter_1.userformatter)(udoc));
+                        (0, response_service_1.success)(req, res, "Password updated successfully!", {});
                     }
                 }, err => {
                     (0, response_service_1.error)(req, res, '', err);
@@ -222,12 +219,50 @@ const updatepassword = (req, res) => __awaiter(void 0, void 0, void 0, function*
         (0, response_service_1.error)(req, res, '', err);
     }
 });
+const updateuser = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
+    try {
+        let params = req.body;
+        let query = { _id: new mongodb_1.ObjectId(`${params._id}`) };
+        let setQuery = {};
+        params.firstname ? setQuery['firstname'] = params.firstname : null;
+        params.lastname ? setQuery['lastname'] = params.lastname : null;
+        params.username ? setQuery['username'] = params.username : null;
+        params.mobile ? setQuery['mobile'] = params.mobile : null;
+        params.gender ? setQuery['gender'] = params.gender : null;
+        params.dob ? setQuery['dob'] = params.dob : null;
+        params.country ? setQuery['country'] = params.country : null;
+        params.provider ? setQuery['provider'] = params.provider : null;
+        params.uid ? setQuery['uid'] = params.uid : null;
+        params.photo_url ? setQuery['photo_url'] = params.photo_url : null;
+        params.preferred_genres ? setQuery['preferred_genres'] = params.preferred_genres : null;
+        params.active ? setQuery['active'] = true : setQuery['active'] = false;
+        setQuery['udate'] = Date.now();
+        user_schema_1.user.findOneAndUpdate(query, { $set: setQuery }).then((doc) => __awaiter(void 0, void 0, void 0, function* () {
+            if (!doc) {
+                (0, response_service_1.error)(req, res, "User updating failed!", "");
+            }
+            else {
+                user_schema_1.user.findOne(query).then((udoc) => {
+                    (0, response_service_1.success)(req, res, "User updated successfully!", (0, userformatter_1.userformatter)(udoc));
+                }, err => {
+                    (0, response_service_1.error)(req, res, '', err);
+                });
+            }
+        }), err => {
+            (0, response_service_1.error)(req, res, '', err);
+        });
+    }
+    catch (err) {
+        (0, response_service_1.error)(req, res, '', err);
+    }
+});
 exports.default = {
     adduser,
     userlogin,
     getuser,
     getallusers,
     deleteuser,
+    updateuser,
     updatepassword,
     checkUserExistAndSaveAndGetUserWithToken
 };

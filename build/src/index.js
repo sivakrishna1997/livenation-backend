@@ -23,13 +23,17 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
 };
 Object.defineProperty(exports, "__esModule", { value: true });
 const dotenv = __importStar(require("dotenv"));
+dotenv.config();
 const express_1 = __importDefault(require("express"));
+const express_fileupload_1 = __importDefault(require("express-fileupload"));
 const cors_1 = __importDefault(require("cors"));
 const helmet_1 = __importDefault(require("helmet"));
 const path = require('path');
+const passport = require('passport');
+const passport_service_1 = __importDefault(require("./service/passport.service"));
 const mongoose_service_1 = __importDefault(require("./service/mongoose.service"));
 const routes_1 = __importDefault(require("./routes"));
-dotenv.config();
+const fileuploadroutes_1 = __importDefault(require("./fileuploadroutes"));
 if (!process.env.PORT) {
     process.exit(1);
 }
@@ -47,8 +51,15 @@ app.use((0, cors_1.default)());
 // }
 // app.use(allowCrossDomain);
 app.use(express_1.default.json());
+//start Passport middleware for authentication
+(0, passport_service_1.default)(passport);
+app.use(passport.initialize());
+// end Passport
 //routes
 app.use('/api', routes_1.default);
+//file Upload Routs
+app.use((0, express_fileupload_1.default)({ useTempFiles: true, tempFileDir: '/tmp/' }));
+app.use('/api/fileupload', fileuploadroutes_1.default);
 app.use(express_1.default.static(path.join(__dirname, '../public')));
 app.get('*', (req, res) => {
     res.sendFile(path.join(__dirname, '../public/index.html'));

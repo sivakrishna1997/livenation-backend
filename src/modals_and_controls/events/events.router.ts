@@ -6,5 +6,6 @@ root.post('/add', event.addevent);
 root.post('/get', event.getevents);
 root.post('/update', event.updateevent);
 root.post('/delete', event.deleteevent);
+root.post('/geteventsforyou', event.geteventsforyou);
 
 export default root;

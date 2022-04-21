@@ -8,11 +8,12 @@ export const events = mongoose.model('events', new mongoose.Schema({
     genre: { type: String, required: true },
     start_date: { type: Date, required: true },
     end_date: { type: Date, required: true },
-    graph_content: [
-        {
-            image: { type: String },
-        }
-    ],
+    graphic_content: {
+        carousel_poster: { type: String },
+        event_poster: { type: String },
+        banner_poster: { type: String },
+        video_url: { type: String },
+    },
     about: { type: String },
     performers: [
         {

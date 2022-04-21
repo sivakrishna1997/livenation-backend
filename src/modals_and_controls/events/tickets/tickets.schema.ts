@@ -18,7 +18,7 @@ export const tickets = mongoose.model('tickets', new mongoose.Schema({
             row_letter: { type: String },
             seat_number: { type: String },
             ticket_code: { type: String },
-            ticket_status: { type: String, enum: ['available', 'sold'] },
+            ticket_status: { type: String, enum: ['available', 'hold', 'fastfilling', 'sold', 'cancelled', 'expired'] },
         }]
     }],
 
