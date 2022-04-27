@@ -40,6 +40,7 @@ const gettickets = (req, res) => {
         params.event_date ? query['event_date'] = params.event_date : null;
         params.stage_setup ? query['stage_setup'] = params.stage_setup : null;
         params.between_dates ? query['event_date'] = { $gte: new Date(params.between_dates.start_date), $lt: new Date(params.between_dates.end_date) } : null;
+        params.event_date_gt ? query['event_date'] = { $gte: new Date(params.event_date_gt) } : null;
         // params.area_id ? query['areas'] = { $elemMatch: { _id: new ObjectId(`${params.area_id}`) } } : null;
         let removeQuery = {};
         params.remove_areas ? removeQuery['areas'] = 0 : null;

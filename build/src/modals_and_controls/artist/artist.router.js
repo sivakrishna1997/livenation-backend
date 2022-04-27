@@ -29,5 +29,6 @@ root.post('/add', artist_ctrl_1.default.addartist);
 root.post('/get', artist_ctrl_1.default.getartist);
 root.post('/update', artist_ctrl_1.default.updateartist);
 root.post('/delete', artist_ctrl_1.default.deleteartist);
+root.post('/getartist_with_eventcount', artist_ctrl_1.default.getartist_with_eventcount);
 exports.default = root;
 //# sourceMappingURL=artist.router.js.map

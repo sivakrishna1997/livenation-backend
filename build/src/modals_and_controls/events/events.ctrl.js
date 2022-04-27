@@ -39,6 +39,7 @@ const getevents = (req, res) => {
         params.main_artist ? query['main_artist'] = params.main_artist : null;
         params.capacity ? query['capacity'] = params.capacity : null;
         params.genre ? query['genre'] = params.genre : null;
+        params.country ? query['country'] = params.country : null;
         params.artist_name ? query['performers'] = { $elemMatch: { artist_name: params.artist_name } } : null;
         params.venue_name ? query['venues'] = { $elemMatch: { venue_name: params.venue_name } } : null;
         params.start_date ? query['start_date'] = params.start_date : null;
@@ -74,6 +75,9 @@ const updateevent = (req, res) => __awaiter(void 0, void 0, void 0, function* ()
         params.genre ? setQuery['genre'] = params.genre : null;
         params.start_date ? setQuery['start_date'] = params.start_date : null;
         params.end_date ? setQuery['end_date'] = params.end_date : null;
+        params.country ? setQuery['country'] = params.country : null;
+        params.add_to_carousel == true ? setQuery['add_to_carousel'] = true : null;
+        params.add_to_carousel == false ? setQuery['add_to_carousel'] = false : null;
         params.graphic_content ? setQuery['graphic_content'] = params.graphic_content : null;
         params.about ? setQuery['about'] = params.about : null;
         params.performers ? setQuery['performers'] = params.performers : null;
@@ -138,7 +142,48 @@ const geteventsforyou = (req, res) => {
                 // eventQuery['start_date'] = { $gte: new Date(params.current_date) };
                 eventQuery['end_date'] = { $gte: new Date(params.current_date) };
                 console.log("eventQuery::::", eventQuery);
-                let required_fields = { _id: 1, concert_title: 1, start_date: 1, end_date: 1, concert_type: 1, genre: 1, graph_content: 1 };
+                let required_fields = { _id: 1, concert_title: 1, start_date: 1, end_date: 1, country: 1, concert_type: 1, genre: 1, graphic_content: 1 };
+                events_schema_1.events.find(eventQuery, required_fields).sort('start_date').then((doc) => {
+                    if (!doc) {
+                        (0, response_service_1.error)(req, res, "No events found!", "");
+                    }
+                    else {
+                        (0, response_service_1.success)(req, res, "Events found!", doc);
+                    }
+                }, err => {
+                    (0, response_service_1.error)(req, res, '', err);
+                });
+            }
+        }, err => {
+            (0, response_service_1.error)(req, res, '', err);
+        });
+    }
+    catch (err) {
+        (0, response_service_1.error)(req, res, '', err);
+    }
+};
+const geteventsforcarousel = (req, res) => {
+    try {
+        let params = req.body;
+        params.current_date = new Date();
+        user_schema_1.user.findOne({ _id: new mongodb_1.ObjectId(`${params.user_id}`) }).then((userDoc) => {
+            if (!userDoc) {
+                (0, response_service_1.error)(req, res, "User doesn't exists!", "");
+            }
+            else {
+                let eventQuery = {};
+                if (userDoc.preferred_genres.length > 0) {
+                    let genres_names = [];
+                    userDoc.preferred_genres.map((genre) => {
+                        genres_names.push(genre.name);
+                    });
+                    eventQuery['genre'] = { $in: genres_names };
+                }
+                // eventQuery['start_date'] = { $gte: new Date(params.current_date) };
+                eventQuery['end_date'] = { $gte: new Date(params.current_date) };
+                eventQuery['add_to_carousel'] = true;
+                console.log("eventQuery::::", eventQuery);
+                let required_fields = { _id: 1, concert_title: 1, start_date: 1, end_date: 1, country: 1, concert_type: 1, genre: 1, graphic_content: 1 };
                 events_schema_1.events.find(eventQuery, required_fields).sort('start_date').then((doc) => {
                     if (!doc) {
                         (0, response_service_1.error)(req, res, "No events found!", "");
@@ -163,6 +208,7 @@ exports.default = {
     getevents,
     updateevent,
     deleteevent,
-    geteventsforyou
+    geteventsforyou,
+    geteventsforcarousel
 };
 //# sourceMappingURL=events.ctrl.js.map

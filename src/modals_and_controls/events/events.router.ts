@@ -7,5 +7,6 @@ root.post('/get', event.getevents);
 root.post('/update', event.updateevent);
 root.post('/delete', event.deleteevent);
 root.post('/geteventsforyou', event.geteventsforyou);
+root.post('/geteventsforcarousel', event.geteventsforcarousel);
 
 export default root;

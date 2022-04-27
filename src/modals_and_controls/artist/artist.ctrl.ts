@@ -41,6 +41,9 @@ const getartist = (req: Request, res: Response) => {
         var query: any = {};
         params.name ? query['name'] = params.name : null;
         params._id ? query['_id'] = new ObjectId(`${params._id}`) : null;
+
+        params.artist_ids ? query['_id'] = { $in: params.artist_ids } : null;
+
         artist.find(query).then(
             (doc: any) => {
                 if (doc) {
@@ -51,6 +54,104 @@ const getartist = (req: Request, res: Response) => {
             }, err => {
                 error(req, res, '', err)
             })
+    } catch (err) {
+        error(req, res, '', err)
+    }
+}
+
+
+const getartist_with_eventcount = (req: Request, res: Response) => {
+    try {
+        let params = req.body;
+        var query: any = {};
+        params.name ? query['name'] = params.name : null;
+        params._id ? query['_id'] = new ObjectId(`${params._id}`) : null;
+
+        params.artist_ids ? query['_id'] = { $in: params.artist_ids } : null;
+
+        artist.aggregate([
+            { $match: query },
+            {
+                $lookup: {
+                    from: "events",
+                    let: { artist_id: "$_id" },
+                    pipeline: [
+                        {
+                            $match: {
+                                performers: {
+                                    $elemMatch: {
+                                        artist_id: "$$artist_id",
+                                    },
+                                },
+                            },
+                        }
+                    ],
+                    // pipeline: [{
+                    //     $match: {
+                    //         $expr: { $in: ["$$artist_id", "$performers.artist_id"] }
+                    //     }
+                    // }],
+                    as: "matches"
+                }
+
+            },
+
+        ]).then(
+            (doc: any) => {
+                if (doc) {
+                    success(req, res, "Artist details!", doc);
+                } else {
+                    error(req, res, "Artist doesn't exists!", "");
+                }
+            }, err => {
+                error(req, res, '', err)
+            })
+
+        // artist.aggregate([
+        //     {
+        //         $lookup: {
+        //             from: "events",
+        //             let: { artist_id: '$_id' },
+        //             pipeline: [
+        //                 // {
+        //                 //     $match: {
+        //                 //         performers: {
+        //                 //             $elemMatch: {
+        //                 //                 artist_name: "$$artist_name",
+        //                 //             },
+        //                 //         },
+        //                 //     }
+        //                 // },
+        //                 {
+        //                     $match: {
+        //                         $in: [{
+        //                             artist_id: '$$artist_id'
+        //                         }, "$performers"] // actual array value is [{ b: 123, a: "ABC" }, { a: 234, b: "BCD" }]
+        //                     }
+        //                 },
+
+        //                 // {
+        //                 //     $match: {
+        //                 //         $expr: { $eq: ["$$artist_id", "$performers.artist_id"] }
+        //                 //     }
+        //                 // },
+        //                 { $project: { _id: 0 } }
+        //             ],
+        //             as: "artist_with_events"
+        //         }
+        //     }
+        // ]).then(
+        //     (doc: any) => {
+        //         if (doc) {
+        //             success(req, res, "Artist details!", doc);
+        //         } else {
+        //             error(req, res, "Artist doesn't exists!", "");
+        //         }
+        //     }, err => {
+        //         error(req, res, '', err)
+        //     })
+
+
     } catch (err) {
         error(req, res, '', err)
     }
@@ -125,5 +226,6 @@ export default {
     getartist,
     updateartist,
     deleteartist,
+    getartist_with_eventcount
 };
 

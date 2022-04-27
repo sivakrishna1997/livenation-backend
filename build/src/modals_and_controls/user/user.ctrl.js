@@ -53,7 +53,7 @@ const adduser = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
         (0, response_service_1.error)(req, res, 'Registration Failed!', err);
     }
 });
-const checkUserExistAndSaveAndGetUserWithToken = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
+const checkUserAndSave = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
     try {
         let params = req.body;
         user_schema_1.user.findOne({ email: params.email }).then((edoc) => __awaiter(void 0, void 0, void 0, function* () {
@@ -235,7 +235,7 @@ const updateuser = (req, res) => __awaiter(void 0, void 0, void 0, function* () 
         params.uid ? setQuery['uid'] = params.uid : null;
         params.photo_url ? setQuery['photo_url'] = params.photo_url : null;
         params.preferred_genres ? setQuery['preferred_genres'] = params.preferred_genres : null;
-        params.active ? setQuery['active'] = true : setQuery['active'] = false;
+        // params.active ? setQuery['active'] = true : setQuery['active'] = false;
         setQuery['udate'] = Date.now();
         user_schema_1.user.findOneAndUpdate(query, { $set: setQuery }).then((doc) => __awaiter(void 0, void 0, void 0, function* () {
             if (!doc) {
@@ -264,6 +264,6 @@ exports.default = {
     deleteuser,
     updateuser,
     updatepassword,
-    checkUserExistAndSaveAndGetUserWithToken
+    checkUserAndSave
 };
 //# sourceMappingURL=user.ctrl.js.map

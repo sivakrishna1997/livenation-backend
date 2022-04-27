@@ -48,7 +48,7 @@ const adduser = async (req: Request, res: Response) => {
     }
 }
 
-const checkUserExistAndSaveAndGetUserWithToken = async (req: Request, res: Response) => {
+const checkUserAndSave = async (req: Request, res: Response) => {
     try {
         let params = req.body;
         user.findOne({ email: params.email }).then(
@@ -243,7 +243,7 @@ const updateuser = async (req: Request, res: Response) => {
         params.uid ? setQuery['uid'] = params.uid : null;
         params.photo_url ? setQuery['photo_url'] = params.photo_url : null;
         params.preferred_genres ? setQuery['preferred_genres'] = params.preferred_genres : null;
-        params.active ? setQuery['active'] = true : setQuery['active'] = false;
+        // params.active ? setQuery['active'] = true : setQuery['active'] = false;
         setQuery['udate'] = Date.now();
 
         user.findOneAndUpdate(query, { $set: setQuery }).then(
@@ -275,6 +275,6 @@ export default {
     deleteuser,
     updateuser,
     updatepassword,
-    checkUserExistAndSaveAndGetUserWithToken
+    checkUserAndSave
 };
 

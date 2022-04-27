@@ -32,6 +32,6 @@ root.get('/getall', user_ctrl_1.default.getallusers);
 root.post('/delete', user_ctrl_1.default.deleteuser);
 root.post('/update', user_ctrl_1.default.updateuser);
 root.post('/updatepassword', user_ctrl_1.default.updatepassword);
-root.post('/check-user-exist-and-save-and-get-user-with-token', user_ctrl_1.default.checkUserExistAndSaveAndGetUserWithToken);
+root.post('/check-user-and-save', user_ctrl_1.default.checkUserAndSave);
 exports.default = root;
 //# sourceMappingURL=user.router.js.map

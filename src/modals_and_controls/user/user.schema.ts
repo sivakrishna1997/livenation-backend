@@ -3,10 +3,10 @@ import * as mongoose from 'mongoose';
 export const user = mongoose.model('users', new mongoose.Schema({
     firstname: { type: String, trim: true, index: true },
     lastname: { type: String, trim: true, index: true },
-    username: { type: String, required: true, unique: true, trim: true, index: true },
+    username: { type: String, required: true, trim: true, index: true },
     email: { type: String, required: true, unique: true, trim: true },
     password: { type: String, trim: true },
-    mobile: { type: String, unique: true, trim: true },
+    mobile: { type: String, trim: true },
     gender: { type: String, enum: ['male', 'female', 'others'] },
     dob: { type: Date },
     country: { type: String },

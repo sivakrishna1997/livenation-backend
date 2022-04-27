@@ -43,6 +43,7 @@ const getartist = (req, res) => {
         var query = {};
         params.name ? query['name'] = params.name : null;
         params._id ? query['_id'] = new mongodb_1.ObjectId(`${params._id}`) : null;
+        params.artist_ids ? query['_id'] = { $in: params.artist_ids } : null;
         artist_schema_1.artist.find(query).then((doc) => {
             if (doc) {
                 (0, response_service_1.success)(req, res, "Artist details!", doc);
@@ -53,6 +54,95 @@ const getartist = (req, res) => {
         }, err => {
             (0, response_service_1.error)(req, res, '', err);
         });
+    }
+    catch (err) {
+        (0, response_service_1.error)(req, res, '', err);
+    }
+};
+const getartist_with_eventcount = (req, res) => {
+    try {
+        let params = req.body;
+        var query = {};
+        params.name ? query['name'] = params.name : null;
+        params._id ? query['_id'] = new mongodb_1.ObjectId(`${params._id}`) : null;
+        params.artist_ids ? query['_id'] = { $in: params.artist_ids } : null;
+        artist_schema_1.artist.aggregate([
+            { $match: query },
+            {
+                $lookup: {
+                    from: "events",
+                    let: { artist_id: "$_id" },
+                    pipeline: [
+                        {
+                            $match: {
+                                performers: {
+                                    $elemMatch: {
+                                        artist_id: "$$artist_id",
+                                    },
+                                },
+                            },
+                        }
+                    ],
+                    // pipeline: [{
+                    //     $match: {
+                    //         $expr: { $in: ["$$artist_id", "$performers.artist_id"] }
+                    //     }
+                    // }],
+                    as: "matches"
+                }
+            },
+        ]).then((doc) => {
+            if (doc) {
+                (0, response_service_1.success)(req, res, "Artist details!", doc);
+            }
+            else {
+                (0, response_service_1.error)(req, res, "Artist doesn't exists!", "");
+            }
+        }, err => {
+            (0, response_service_1.error)(req, res, '', err);
+        });
+        // artist.aggregate([
+        //     {
+        //         $lookup: {
+        //             from: "events",
+        //             let: { artist_id: '$_id' },
+        //             pipeline: [
+        //                 // {
+        //                 //     $match: {
+        //                 //         performers: {
+        //                 //             $elemMatch: {
+        //                 //                 artist_name: "$$artist_name",
+        //                 //             },
+        //                 //         },
+        //                 //     }
+        //                 // },
+        //                 {
+        //                     $match: {
+        //                         $in: [{
+        //                             artist_id: '$$artist_id'
+        //                         }, "$performers"] // actual array value is [{ b: 123, a: "ABC" }, { a: 234, b: "BCD" }]
+        //                     }
+        //                 },
+        //                 // {
+        //                 //     $match: {
+        //                 //         $expr: { $eq: ["$$artist_id", "$performers.artist_id"] }
+        //                 //     }
+        //                 // },
+        //                 { $project: { _id: 0 } }
+        //             ],
+        //             as: "artist_with_events"
+        //         }
+        //     }
+        // ]).then(
+        //     (doc: any) => {
+        //         if (doc) {
+        //             success(req, res, "Artist details!", doc);
+        //         } else {
+        //             error(req, res, "Artist doesn't exists!", "");
+        //         }
+        //     }, err => {
+        //         error(req, res, '', err)
+        //     })
     }
     catch (err) {
         (0, response_service_1.error)(req, res, '', err);
@@ -119,5 +209,6 @@ exports.default = {
     getartist,
     updateartist,
     deleteartist,
+    getartist_with_eventcount
 };
 //# sourceMappingURL=artist.ctrl.js.map

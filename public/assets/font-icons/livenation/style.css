@@ -1,10 +1,10 @@
 @font-face {
   font-family: 'livenation';
-  src:  url('fonts/livenation.eot?jta54m');
-  src:  url('fonts/livenation.eot?jta54m#iefix') format('embedded-opentype'),
-    url('fonts/livenation.ttf?jta54m') format('truetype'),
-    url('fonts/livenation.woff?jta54m') format('woff'),
-    url('fonts/livenation.svg?jta54m#livenation') format('svg');
+  src:  url('fonts/livenation.eot?o4337r');
+  src:  url('fonts/livenation.eot?o4337r#iefix') format('embedded-opentype'),
+    url('fonts/livenation.ttf?o4337r') format('truetype'),
+    url('fonts/livenation.woff?o4337r') format('woff'),
+    url('fonts/livenation.svg?o4337r#livenation') format('svg');
   font-weight: normal;
   font-style: normal;
   font-display: block;
@@ -25,6 +25,15 @@
   -moz-osx-font-smoothing: grayscale;
 }
 
+.fi-ln-calendar-schedule:before {
+  content: "\ea43";
+}
+.fi-ln-card-payment:before {
+  content: "\ea44";
+}
+.fi-ln-paypal:before {
+  content: "\ea45";
+}
 .fi-library:before {
   content: "\ea42";
 }

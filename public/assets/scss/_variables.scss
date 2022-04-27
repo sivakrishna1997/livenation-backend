@@ -1,6 +1,6 @@
 // Bootstrap Theming Customization
 
-$primary:#D1363E;
+$primary:#D1363F;
 $secondary:#BEBFC4;
 $success:#198754;
 $info:#11caf0;
@@ -9,6 +9,7 @@ $danger:#F0142F;
 $light:#f8f9fa;
 $white:#ffffff;
 $dark-gray:#828282;
+$dark1:#272727;
 $dark:#1A1A1A;
 
 $dusty-blue:#527DBE;
@@ -50,6 +51,7 @@ $theme-colors: ("primary": $primary,
   "white": $white,
   "dark": $dark,
   "bronze": $bronze,
+  "dark1": $dark1,
 
   // social
   "facebook": $facebook,
@@ -73,6 +75,7 @@ $ff-poppins: 'Poppins',sans-serif;
 
 // icon
 $selectArrow:url('../imgs/icons/select-arrow.svg');
+$selectArrowDark:url('../imgs/select-arrow-light.svg');
 $dropdownArrow:url('../imgs/icons/arrow-down.svg');
 
 // Background Images

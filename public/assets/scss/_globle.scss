@@ -29,10 +29,12 @@ body {
 .devider-on-dark {
   background-color: $gray500;
 }
-label{
+
+label {
   font-size: 1.25rem;
   color: $dark;
 }
+
 .section-content {
   padding-top: 1.5rem;
   padding-bottom: 1.5rem;
@@ -64,7 +66,42 @@ label{
 
         }
       }
+
+      .btn {
+        height: 2.5rem;
+        font-size: .875rem;
+        padding: 0 3rem;
+        letter-spacing: 1px;
+        border-radius: .325rem;
+
+      }
     }
+  }
+}
+
+.video-container {
+  float: none;
+  clear: both;
+  width: 100%;
+  position: relative;
+  padding-bottom: 56.25%;
+  padding-top: 25px;
+  height: 0;
+
+  iframe {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+  }
+}
+
+.form-control {
+  &.form-control-dark {
+    background-color: #303030;
+    border-color: #303030;
+    color: $white;
   }
 }
 
@@ -75,6 +112,11 @@ select {
     background-position: right center;
     background-repeat: no-repeat;
     appearance: none;
+
+    &.form-control-dark {
+
+      padding-right: 3rem;
+    }
   }
 }
 
@@ -114,28 +156,70 @@ select {
 // Pagination
 
 .pagination {
-  gap: 0.125rem;
-  .page-item {
-    .page-link {
-      border: none;
-      border-radius: $br*.5;
-      min-width: 2.25rem;
-      min-height: 2.25rem;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-    }
+  &:not(.pagination-clear) {
+    gap: 0.125rem;
 
-    &.page-item-icon {
+    .page-item {
       .page-link {
-        font-size: 1.5rem;
-        padding: 0 .5rem;
+        border: none;
+        border-radius: $br*.5;
+        min-width: 2.25rem;
+        min-height: 2.25rem;
+        display: flex;
+        align-items: center;
+        justify-content: center;
       }
-    }
-    &:not(.active){
-      .page-link{
-        color: rgba($dark, .5);
+
+      &.page-item-icon {
+        .page-link {
+          font-size: 1.5rem;
+          padding: 0 .5rem;
+        }
+      }
+
+      &:not(.active) {
+        .page-link {
+          color: rgba($dark, .5);
+        }
       }
     }
   }
+
+  &.pagination-clear {
+    .page-item {
+      .page-link {
+        color: $white;
+        background: transparent;
+        border: none;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        height: 100%;
+
+        .icon {
+          font-size: 1.5rem;
+        }
+
+        &:not(.active) {
+          &:hover {
+            color: lighten($primary, 30);
+          }
+        }
+
+        &.active {
+          color: $primary;
+        }
+      }
+
+      &.disabled {
+        opacity: .3;
+      }
+
+    }
+  }
+}
+
+
+.cursor-pointer {
+  cursor: pointer;
 }

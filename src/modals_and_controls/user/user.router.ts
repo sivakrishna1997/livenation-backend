@@ -9,7 +9,7 @@ root.get('/getall', userCtrls.getallusers);
 root.post('/delete', userCtrls.deleteuser);
 root.post('/update', userCtrls.updateuser);
 root.post('/updatepassword', userCtrls.updatepassword);
-root.post('/check-user-exist-and-save-and-get-user-with-token', userCtrls.checkUserExistAndSaveAndGetUserWithToken);
+root.post('/check-user-and-save', userCtrls.checkUserAndSave);
 
 
 export default root;

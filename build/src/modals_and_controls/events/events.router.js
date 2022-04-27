@@ -30,5 +30,6 @@ root.post('/get', events_ctrl_1.default.getevents);
 root.post('/update', events_ctrl_1.default.updateevent);
 root.post('/delete', events_ctrl_1.default.deleteevent);
 root.post('/geteventsforyou', events_ctrl_1.default.geteventsforyou);
+root.post('/geteventsforcarousel', events_ctrl_1.default.geteventsforcarousel);
 exports.default = root;
 //# sourceMappingURL=events.router.js.map

@@ -5,7 +5,6 @@ import { ObjectId } from 'mongodb';
 import { user } from '../user/user.schema';
 
 
-
 const addevent = async (req: Request, res: Response) => {
     try {
         let params = req.body;
@@ -38,6 +37,8 @@ const getevents = (req: Request, res: Response) => {
         params.main_artist ? query['main_artist'] = params.main_artist : null;
         params.capacity ? query['capacity'] = params.capacity : null;
         params.genre ? query['genre'] = params.genre : null;
+        params.country ? query['country'] = params.country : null;
+
         params.artist_name ? query['performers'] = { $elemMatch: { artist_name: params.artist_name } } : null;
         params.venue_name ? query['venues'] = { $elemMatch: { venue_name: params.venue_name } } : null;
         params.start_date ? query['start_date'] = params.start_date : null;
@@ -74,6 +75,11 @@ const updateevent = async (req: Request, res: Response) => {
         params.genre ? setQuery['genre'] = params.genre : null;
         params.start_date ? setQuery['start_date'] = params.start_date : null;
         params.end_date ? setQuery['end_date'] = params.end_date : null;
+        params.country ? setQuery['country'] = params.country : null;
+
+        params.add_to_carousel == true ? setQuery['add_to_carousel'] = true : null;
+        params.add_to_carousel == false ? setQuery['add_to_carousel'] = false : null;
+
         params.graphic_content ? setQuery['graphic_content'] = params.graphic_content : null;
         params.about ? setQuery['about'] = params.about : null;
         params.performers ? setQuery['performers'] = params.performers : null;
@@ -149,7 +155,57 @@ const geteventsforyou = (req: Request, res: Response) => {
                     eventQuery['end_date'] = { $gte: new Date(params.current_date) };
 
                     console.log("eventQuery::::", eventQuery);
-                    let required_fields: any = { _id: 1, concert_title: 1, start_date: 1, end_date: 1, concert_type: 1, genre: 1, graph_content: 1 }
+                    let required_fields: any = { _id: 1, concert_title: 1, start_date: 1, end_date: 1, country: 1, concert_type: 1, genre: 1, graphic_content: 1 }
+                    events.find(eventQuery, required_fields).sort('start_date').then(
+                        (doc: any) => {
+                            if (!doc) {
+                                error(req, res, "No events found!", "");
+                            } else {
+                                success(req, res, "Events found!", doc);
+                            }
+                        }, err => {
+                            error(req, res, '', err)
+                        })
+                }
+
+
+            }, err => {
+                error(req, res, '', err)
+            }
+        )
+
+    } catch (err) {
+        error(req, res, '', err)
+    }
+}
+
+
+const geteventsforcarousel = (req: Request, res: Response) => {
+    try {
+        let params = req.body;
+        params.current_date = new Date();
+
+        user.findOne({ _id: new ObjectId(`${params.user_id}`) }).then(
+            (userDoc: any) => {
+                if (!userDoc) {
+                    error(req, res, "User doesn't exists!", "");
+                } else {
+                    let eventQuery: any = {};
+
+                    if (userDoc.preferred_genres.length > 0) {
+                        let genres_names: any = [];
+                        userDoc.preferred_genres.map((genre: any) => {
+                            genres_names.push(genre.name);
+                        })
+
+                        eventQuery['genre'] = { $in: genres_names };
+                    }
+
+                    // eventQuery['start_date'] = { $gte: new Date(params.current_date) };
+                    eventQuery['end_date'] = { $gte: new Date(params.current_date) };
+                    eventQuery['add_to_carousel'] = true;
+                    console.log("eventQuery::::", eventQuery);
+                    let required_fields: any = { _id: 1, concert_title: 1, start_date: 1, end_date: 1, country: 1, concert_type: 1, genre: 1, graphic_content: 1 }
                     events.find(eventQuery, required_fields).sort('start_date').then(
                         (doc: any) => {
                             if (!doc) {
@@ -175,13 +231,12 @@ const geteventsforyou = (req: Request, res: Response) => {
 
 
 
-
-
 export default {
     addevent,
     getevents,
     updateevent,
     deleteevent,
-    geteventsforyou
+    geteventsforyou,
+    geteventsforcarousel
 };
 

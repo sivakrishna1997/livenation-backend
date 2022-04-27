@@ -29,6 +29,8 @@ exports.events = mongoose.model('events', new mongoose.Schema({
     genre: { type: String, required: true },
     start_date: { type: Date, required: true },
     end_date: { type: Date, required: true },
+    country: { type: String },
+    add_to_carousel: { type: Boolean, default: false },
     graphic_content: {
         carousel_poster: { type: String },
         event_poster: { type: String },
