@@ -8,10 +8,10 @@ import { ObjectId } from 'mongodb';
 const addpackage = async (req: Request, res: Response) => {
     try {
         let params = req.body;
-        packages.findOne({ name: params.name }).then(
+        packages.findOne({ title: params.title }).then(
             async (udoc) => {
                 if (udoc) {
-                    error(req, res, 'Artist already exist!', null)
+                    error(req, res, 'Pacakge already exist!', null)
                 } else {
                     params['cdate'] = Date.now();
                     params['udate'] = Date.now();

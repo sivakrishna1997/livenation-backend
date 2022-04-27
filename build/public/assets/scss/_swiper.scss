@@ -1,0 +1,58 @@
+swiper {
+  &.swiper-thumbnail {
+    --swiper-navigation-size: 2rem;
+
+    .swiper-button-prev,
+    .swiper-button-next {
+      top: 0;
+
+      padding: 1rem 2rem;
+      background-color: rgba($black, .6);
+      -webkit-backdrop-filter: blur(10px);
+      backdrop-filter: blur(10px);
+      margin: 0;
+      color: $white;
+      @include transition;
+
+      &::after {
+        font-family: 'livenation' !important;
+      }
+
+      &.swiper-button-disabled {
+        opacity: 0;
+      }
+    }
+
+    &:not(.swiper-thumbnail-extra) {
+
+      .swiper-button-prev,
+      .swiper-button-next {
+        height: calc(100% - 58px);
+      }
+    }
+
+    &.swiper-thumbnail-extra {
+      padding-bottom: 0.5rem;
+      .swiper-button-prev,
+      .swiper-button-next {
+        height: calc(100% - .5rem);
+      }
+    }
+
+    .swiper-button-prev {
+      left: 0;
+
+      &::after {
+        content: '\ea31';
+      }
+    }
+
+    .swiper-button-next {
+      right: 0;
+
+      &::after {
+        content: '\ea32';
+      }
+    }
+  }
+}

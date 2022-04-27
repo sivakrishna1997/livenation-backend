@@ -1,0 +1,72 @@
+.accordion {
+  &.on-dark {
+    .card {
+      border: none;
+      background-color: transparent;
+      border-bottom: 1px solid $white;
+      border-radius: 0;
+
+      &:first-child {
+        border-top: 1px solid $white;
+      }
+
+      .card-header {
+        padding: 0;
+
+        .btn {
+          text-align: left;
+          text-decoration: none;
+          padding: 1rem 0;
+          box-shadow: none;
+          padding-right: 4rem;
+          position: relative;
+
+          h2 {
+            font-size: 1.25rem;
+            color: $white;
+            margin: 0 0 1.25rem;
+          }
+
+          p {
+            margin: 0;
+            color: $infoColor;
+            font-size: 1.25rem;
+          }
+
+          &:not(.collapsed) {
+            &:after {
+              transform: rotate(90deg);
+            }
+          }
+
+          &::after {
+            content: '\e930';
+            font-family: 'livenation' !important;
+            position: absolute;
+            width: 2.5rem;
+            height: 2.5rem;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            top: 50%;
+            right: 0;
+            color: $white;
+            font-size: 2rem;
+            @include transition;
+            transform: rotate(0deg);
+
+          }
+        }
+      }
+
+      .card-body {
+        color: $white;
+        font-size: 1rem;
+        padding: 0;
+        padding-top: 1rem;
+        padding-bottom: 2rem;
+      }
+    }
+  }
+
+}
