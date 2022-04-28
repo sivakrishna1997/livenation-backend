@@ -8,16 +8,23 @@ import { ObjectId } from 'mongodb';
 const addpackage = async (req: Request, res: Response) => {
     try {
         let params = req.body;
-        params['cdate'] = Date.now();
-        params['udate'] = Date.now();
-        var inputdata = new packages(params);
-        inputdata.save().then(
-            (doc: any) => {
-                success(req, res, 'Package added successfully!', doc);
-            }, (err: any) => {
-                error(req, res, 'Package adding failed!', err);
-            }
-        )
+        packages.findOne({ title: params.title, ticket_id: params.ticket_id }).then(
+            async (udoc) => {
+                if (udoc) {
+                    error(req, res, 'Genre already exist!', null)
+                } else {
+                    params['cdate'] = Date.now();
+                    params['udate'] = Date.now();
+                    var inputdata = new packages(params);
+                    inputdata.save().then(
+                        (doc: any) => {
+                            success(req, res, 'Package added successfully!', doc);
+                        }, (err: any) => {
+                            error(req, res, 'Package adding failed!', err);
+                        }
+                    )
+                }
+            })
     } catch (err) {
         error(req, res, '', err)
     }
