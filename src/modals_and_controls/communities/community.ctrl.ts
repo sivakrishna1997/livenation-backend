@@ -63,7 +63,6 @@ const updatecommunity = async (req: Request, res: Response) => {
         let setQuery: any = {};
 
         params.community_name ? setQuery['community_name'] = params.community_name : null;
-        params.community ? setQuery['community'] = params.community : null;
         setQuery['udate'] = Date.now();
 
         communities.findOneAndUpdate(
