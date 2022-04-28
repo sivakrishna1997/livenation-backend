@@ -9,8 +9,8 @@ function mongodb() {
         dbName: 'livenation',
         autoIndex: true
     };
-    // let url = "mongodb://localhost:27017/livenation";
-    let url = "mongodb+srv://tal:tal@cluster0.jmvgw.mongodb.net/livenation";
+    let url = "mongodb://localhost:27017/livenation";
+    // let url = "mongodb+srv://tal:tal@cluster0.jmvgw.mongodb.net/livenation";
     mongoose_1.default.connect(url, options).then(response => {
         console.log('DB connected! "livenation"');
     }, err => {
