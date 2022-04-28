@@ -39,7 +39,7 @@ const getcommunity = (req: Request, res: Response) => {
     try {
         let params = req.body;
         var query: any = {};
-        params.name ? query['name'] = params.name : null;
+        params.community_name ? query['community_name'] = params.community_name : null;
         params._id ? query['_id'] = new ObjectId(`${params._id}`) : null;
         communities.find(query).then(
             (doc: any) => {
@@ -78,7 +78,7 @@ const updatecommunity = async (req: Request, res: Response) => {
                 if (!udoc) {
                     error(req, res, "Community doesn't exists!", null);
                 } else {
-                    success(req, res, "Community updated successfully!", udoc);
+                    success(req, res, "Community updated successfully!", {});
                 }
             }, err => {
                 error(req, res, '', err);
