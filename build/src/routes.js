@@ -35,6 +35,7 @@ const venue_router_1 = require("./modals_and_controls/venue/venue.router");
 const events_router_1 = __importDefault(require("./modals_and_controls/events/events.router"));
 const tickets_router_1 = __importDefault(require("./modals_and_controls/events/tickets/tickets.router"));
 const packages_router_1 = __importDefault(require("./modals_and_controls/packages/packages.router"));
+const community_router_1 = __importDefault(require("./modals_and_controls/communities/community.router"));
 // const passport = require("passport")
 // const authenticate = passport.authenticate('jwt', { session: false })
 router.use('/user', user_router_1.default);
@@ -45,6 +46,7 @@ router.use('/stages', venue_router_1.stageroot);
 router.use('/events', events_router_1.default);
 router.use('/tickets', tickets_router_1.default);
 router.use('/packages', packages_router_1.default);
+router.use('/communities', community_router_1.default);
 // routes.use('/material', authenticate, materialrouts);
 exports.default = router;
 //# sourceMappingURL=routes.js.map

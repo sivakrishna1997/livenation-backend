@@ -9,45 +9,46 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
     });
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-const packages_schema_1 = require("./packages.schema");
+const community_schema_1 = require("./community.schema");
 const response_service_1 = require("../../service/response.service");
 const mongodb_1 = require("mongodb");
-const addpackage = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
+const addcommunity = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
     try {
         let params = req.body;
-        packages_schema_1.packages.findOne({ title: params.title, ticket_id: params.ticket_id }).then((udoc) => __awaiter(void 0, void 0, void 0, function* () {
+        community_schema_1.communities.findOne({ community_name: params.community_name }).then((udoc) => __awaiter(void 0, void 0, void 0, function* () {
             if (udoc) {
-                (0, response_service_1.error)(req, res, 'Package Title already exist!', null);
+                (0, response_service_1.error)(req, res, 'Community Name already exist!', null);
             }
             else {
                 params['cdate'] = Date.now();
                 params['udate'] = Date.now();
-                var inputdata = new packages_schema_1.packages(params);
+                var inputdata = new community_schema_1.communities(params);
                 inputdata.save().then((doc) => {
-                    (0, response_service_1.success)(req, res, 'Package added successfully!', doc);
+                    (0, response_service_1.success)(req, res, 'Community added successfully!', doc);
                 }, (err) => {
-                    (0, response_service_1.error)(req, res, 'Package adding failed!', err);
+                    (0, response_service_1.error)(req, res, 'Community adding failed!', err);
                 });
             }
-        }));
+        }), err => {
+            (0, response_service_1.error)(req, res, '', err);
+        });
     }
     catch (err) {
         (0, response_service_1.error)(req, res, '', err);
     }
 });
-const getpackages = (req, res) => {
+const getcommunity = (req, res) => {
     try {
         let params = req.body;
         var query = {};
-        params.title ? query['title'] = params.title : null;
+        params.community_name ? query['community_name'] = params.community_name : null;
         params._id ? query['_id'] = new mongodb_1.ObjectId(`${params._id}`) : null;
-        params.ticket_id ? query['ticket_id'] = new mongodb_1.ObjectId(`${params.ticket_id}`) : null;
-        packages_schema_1.packages.find(query).then((doc) => {
+        community_schema_1.communities.find(query).then((doc) => {
             if (doc) {
-                (0, response_service_1.success)(req, res, "Package details!", doc);
+                (0, response_service_1.success)(req, res, "Community Details!", doc);
             }
             else {
-                (0, response_service_1.error)(req, res, "Package doesn't exists!", "");
+                (0, response_service_1.error)(req, res, "Community Doesn't Exists!", "");
             }
         }, err => {
             (0, response_service_1.error)(req, res, '', err);
@@ -57,26 +58,22 @@ const getpackages = (req, res) => {
         (0, response_service_1.error)(req, res, '', err);
     }
 };
-const updatepackage = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
+const updatecommunity = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
     try {
         let params = req.body;
         let setQuery = {};
-        params.title ? setQuery['title'] = params.title : null;
-        params.price ? setQuery['price'] = params.price : null;
-        params.equivalent_points ? setQuery['equivalent_points'] = params.equivalent_points : null;
-        params.available_quantity ? setQuery['available_quantity'] = params.available_quantity : null;
-        params.inclusions ? setQuery['inclusions'] = params.inclusions : null;
+        params.community_name ? setQuery['community_name'] = params.community_name : null;
         setQuery['udate'] = Date.now();
-        packages_schema_1.packages.findOneAndUpdate({
+        community_schema_1.communities.findOneAndUpdate({
             _id: new mongodb_1.ObjectId(`${params._id}`)
         }, {
             $set: setQuery
         }).then((udoc) => {
             if (!udoc) {
-                (0, response_service_1.error)(req, res, "Package doesn't exists!", null);
+                (0, response_service_1.error)(req, res, "Community doesn't exists!", null);
             }
             else {
-                (0, response_service_1.success)(req, res, "Package updated successfully!", {});
+                (0, response_service_1.success)(req, res, "Community updated successfully!", {});
             }
         }, err => {
             (0, response_service_1.error)(req, res, '', err);
@@ -86,16 +83,16 @@ const updatepackage = (req, res) => __awaiter(void 0, void 0, void 0, function* 
         (0, response_service_1.error)(req, res, '', err);
     }
 });
-const deletepackage = (req, res) => {
+const deletecommunity = (req, res) => {
     try {
         let params = req.body;
         let query = { _id: new mongodb_1.ObjectId(`${params._id}`) };
-        packages_schema_1.packages.findOneAndDelete(query).then((doc) => {
+        community_schema_1.communities.findOneAndDelete(query).then((doc) => {
             if (!doc) {
-                (0, response_service_1.error)(req, res, "Package doesn't exists!", "");
+                (0, response_service_1.error)(req, res, "Community doesn't exists!", "");
             }
             else {
-                (0, response_service_1.success)(req, res, "Package deleted successfully!", {});
+                (0, response_service_1.success)(req, res, "Community deleted successfully!", {});
             }
         }, err => {
             (0, response_service_1.error)(req, res, '', err);
@@ -106,9 +103,9 @@ const deletepackage = (req, res) => {
     }
 };
 exports.default = {
-    addpackage,
-    getpackages,
-    updatepackage,
-    deletepackage,
+    addcommunity,
+    getcommunity,
+    updatecommunity,
+    deletecommunity
 };
-//# sourceMappingURL=packages.ctrl.js.map
+//# sourceMappingURL=community.ctrl.js.map

@@ -22,17 +22,16 @@ var __importStar = (this && this.__importStar) || function (mod) {
     __setModuleDefault(result, mod);
     return result;
 };
+var __importDefault = (this && this.__importDefault) || function (mod) {
+    return (mod && mod.__esModule) ? mod : { "default": mod };
+};
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.packages = void 0;
-const mongoose = __importStar(require("mongoose"));
-exports.packages = mongoose.model('packages', new mongoose.Schema({
-    ticket_id: { type: String, required: true },
-    title: { type: String, required: true, trim: true, index: true },
-    price: { type: String },
-    equivalent_points: { type: String },
-    available_quantity: { type: String },
-    inclusions: { type: String },
-    cdate: { type: Date },
-    udate: { type: Date }
-}));
-//# sourceMappingURL=packages.schema.js.map
+const express = __importStar(require("express"));
+const root = express.Router();
+const community_ctrl_1 = __importDefault(require("./community.ctrl"));
+root.post('/add', community_ctrl_1.default.addcommunity);
+root.post('/get', community_ctrl_1.default.getcommunity);
+root.post('/update', community_ctrl_1.default.updatecommunity);
+root.post('/delete', community_ctrl_1.default.deletecommunity);
+exports.default = root;
+//# sourceMappingURL=community.router.js.map

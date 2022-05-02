@@ -23,16 +23,11 @@ var __importStar = (this && this.__importStar) || function (mod) {
     return result;
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.packages = void 0;
+exports.communities = void 0;
 const mongoose = __importStar(require("mongoose"));
-exports.packages = mongoose.model('packages', new mongoose.Schema({
-    ticket_id: { type: String, required: true },
-    title: { type: String, required: true, trim: true, index: true },
-    price: { type: String },
-    equivalent_points: { type: String },
-    available_quantity: { type: String },
-    inclusions: { type: String },
+exports.communities = mongoose.model('communities', new mongoose.Schema({
+    community_name: { type: String, required: true, trim: true, index: true },
     cdate: { type: Date },
     udate: { type: Date }
 }));
-//# sourceMappingURL=packages.schema.js.map
+//# sourceMappingURL=community.schema.js.map

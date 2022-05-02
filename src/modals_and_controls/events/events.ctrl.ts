@@ -38,7 +38,7 @@ const getevents = (req: Request, res: Response) => {
         params.capacity ? query['capacity'] = params.capacity : null;
         params.genre ? query['genre'] = params.genre : null;
         params.country ? query['country'] = params.country : null;
-        params.communinty ? query['communinty'] = params.communinty : null;
+        params.community ? query['community'] = params.community : null;
 
         params.artist_name ? query['performers'] = { $elemMatch: { artist_name: params.artist_name } } : null;
         params.venue_name ? query['venues'] = { $elemMatch: { venue_name: params.venue_name } } : null;
@@ -77,7 +77,7 @@ const updateevent = async (req: Request, res: Response) => {
         params.start_date ? setQuery['start_date'] = params.start_date : null;
         params.end_date ? setQuery['end_date'] = params.end_date : null;
         params.country ? setQuery['country'] = params.country : null;
-        params.communinty ? setQuery['communinty'] = params.communinty : null;
+        params.community ? setQuery['community'] = params.community : null;
 
         params.add_to_carousel == true ? setQuery['add_to_carousel'] = true : null;
         params.add_to_carousel == false ? setQuery['add_to_carousel'] = false : null;

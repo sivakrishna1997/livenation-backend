@@ -46,7 +46,14 @@ const app = (0, express_1.default)();
 (0, mongoose_service_1.default)();
 app.use((0, helmet_1.default)({ contentSecurityPolicy: false }));
 app.use((0, cors_1.default)());
-// app.options('*', cors);
+// app.use(cors(
+//     {
+//         origin: ['*', 'http:localhost:4200', 'https://res.cloudinary.com/', 'https://testlivenation.herokuapp.com/'],
+//         // origin: "*",
+//         methods: ['GET', 'POST', 'PUT', 'DELETE'],
+//         allowedHeaders: ['Content-Type', 'Authorization', 'Accept', 'Origin', 'X-Requested-With', 'Access-Control-Allow-Origin', 'Access-Control-Allow-Headers', 'Access-Control-Allow-Methods', 'Access-Control-Allow-Credentials']
+//     } as cors.CorsOptions
+// ));
 // var allowCrossDomain = function (req: Request, res: Response, next: NextFunction) {
 //     res.header('Access-Control-Allow-Origin', '*');
 //     res.header('Access-Control-Allow-Methods', 'GET, PUT, POST, DELETE');

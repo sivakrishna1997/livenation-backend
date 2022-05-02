@@ -9,7 +9,7 @@ export const events = mongoose.model('events', new mongoose.Schema({
     start_date: { type: Date, required: true },
     end_date: { type: Date, required: true },
     country: { type: String },
-    communinty: { type: String },
+    community: { type: String },
     add_to_carousel: { type: Boolean, default: false },
     graphic_content: {
         carousel_poster: { type: String },
