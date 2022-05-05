@@ -1,6 +1,6 @@
 import { parking } from './parking.schema';
 import { Request, Response } from "express";
-import { success, error } from '../../../service/response.service';
+import { success, error } from '../../service/response.service';
 import { ObjectId } from 'mongodb';
 
 
@@ -53,9 +53,13 @@ const updateparking = async (req: Request, res: Response) => {
         params._id ? basedOn['_id'] = new ObjectId(`${params._id}`) : null;
 
         let setQuery: any = {};
+        params.name ? setQuery['name'] = params.name : null;
+        params.image ? setQuery['image'] = params.image : null;
+        params.location ? setQuery['location'] = params.location : null;
         params.parking_slot_for_packages ? setQuery['parking_slot_for_packages'] = params.parking_slot_for_packages : null;
         params.vallet_parking_slots ? setQuery['vallet_parking_slots'] = params.vallet_parking_slots : null;
         params.vip_parking_slots ? setQuery['vip_parking_slots'] = params.vip_parking_slots : null;
+        params.description ? setQuery['description'] = params.description : null;
 
         parking.findOneAndUpdate(basedOn, { $set: setQuery }).then(
             (udoc: any) => {

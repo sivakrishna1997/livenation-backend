@@ -30,3 +30,20 @@ export const tickets = mongoose.model('tickets', new mongoose.Schema({
 
 
 
+export const parking_tickets = mongoose.model('parkingtickets', new mongoose.Schema({
+    ticket_id: { type: String, required: true },
+    price: { type: String },
+    distance: { type: String },
+    parking_id: { type: String },
+    parking_name: { type: String },
+    parking_seats: [{
+        type: { type: String, enum: ['vip', 'vallet', 'normal'] }, // vip, vallet, normal
+        seat_number: { type: String },
+        ticket_code: { type: String },
+        status: { type: String, enum: ['available', 'hold', 'fastfilling', 'sold', 'cancelled', 'expired'] },
+    }],
+
+    cdate: { type: Date },
+    udate: { type: Date }
+})
+)

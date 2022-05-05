@@ -17,6 +17,7 @@
   "dependencies": {
     "@types/express-fileupload": "^1.2.2",
     "@types/mongoose": "^5.11.97",
+    "@types/paypal-rest-sdk": "^1.7.6",
     "bcryptjs": "^2.4.3",
     "cloudinary": "^1.27.0",
     "cors": "^2.8.5",
@@ -28,7 +29,7 @@
     "mongoose": "^5.13.14",
     "passport": "^0.4.1",
     "passport-jwt": "^4.0.0",
-    "payumoney-pay": "^2.1.1",
+    "paypal-rest-sdk": "^1.8.1",
     "uuid": "^8.3.2"
   },
   "devDependencies": {
