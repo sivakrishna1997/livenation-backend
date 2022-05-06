@@ -204,7 +204,7 @@ const updateparking_tickets = async (req: Request, res: Response) => {
 
         let basedOn: any = {};
         params._id ? basedOn['_id'] = new ObjectId(`${params._id}`) : null;
-        params.ticket_id ? basedOn['ticket_id'] = params.ticket_id : null;
+        // params.ticket_id ? basedOn['ticket_id'] = params.ticket_id : null;
 
         let setQuery: any = {};
         params.price ? setQuery['price'] = params.price : null;
