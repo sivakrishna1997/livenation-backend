@@ -82,6 +82,9 @@ const updateevent = async (req: Request, res: Response) => {
         params.add_to_carousel == true ? setQuery['add_to_carousel'] = true : null;
         params.add_to_carousel == false ? setQuery['add_to_carousel'] = false : null;
 
+        params.featured == true ? setQuery['featured'] = true : null;
+        params.featured == false ? setQuery['featured'] = false : null;
+
         params.graphic_content ? setQuery['graphic_content'] = params.graphic_content : null;
         params.about ? setQuery['about'] = params.about : null;
         params.performers ? setQuery['performers'] = params.performers : null;
@@ -231,7 +234,54 @@ const geteventsforcarousel = (req: Request, res: Response) => {
     }
 }
 
+const getfeaturedevents = (req: Request, res: Response) => {
+    try {
+        let params = req.body;
+        params.current_date = new Date();
 
+        user.findOne({ _id: new ObjectId(`${params.user_id}`) }).then(
+            (userDoc: any) => {
+                if (!userDoc) {
+                    error(req, res, "User doesn't exists!", "");
+                } else {
+                    let eventQuery: any = {};
+
+                    if (userDoc.preferred_genres.length > 0) {
+                        let genres_names: any = [];
+                        userDoc.preferred_genres.map((genre: any) => {
+                            genres_names.push(genre.name);
+                        })
+
+                        eventQuery['genre'] = { $in: genres_names };
+                    }
+
+                    // eventQuery['start_date'] = { $gte: new Date(params.current_date) };
+                    eventQuery['end_date'] = { $gte: new Date(params.current_date) };
+                    eventQuery['featured'] = true;
+                    console.log("eventQuery::::", eventQuery);
+                    let required_fields: any = { _id: 1, concert_title: 1, start_date: 1, end_date: 1, country: 1, concert_type: 1, genre: 1, graphic_content: 1 }
+                    events.find(eventQuery, required_fields).sort('start_date').then(
+                        (doc: any) => {
+                            if (!doc) {
+                                error(req, res, "No events found!", "");
+                            } else {
+                                success(req, res, "Events found!", doc);
+                            }
+                        }, err => {
+                            error(req, res, '', err)
+                        })
+                }
+
+
+            }, err => {
+                error(req, res, '', err)
+            }
+        )
+
+    } catch (err) {
+        error(req, res, '', err)
+    }
+}
 
 export default {
     addevent,
@@ -239,6 +289,7 @@ export default {
     updateevent,
     deleteevent,
     geteventsforyou,
-    geteventsforcarousel
+    geteventsforcarousel,
+    getfeaturedevents
 };
 

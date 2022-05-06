@@ -18,6 +18,7 @@ export const userformatter = (user: any) => {
         uid: user.uid ? user.uid : null,
         email_verified: user.email_verified,
         preferred_genres: user.preferred_genres ? user.preferred_genres : [],
+        subscription: user.subscription ? user.subscription : 'free',
         active: user.active,
         cdate: user.cdate ? user.cdate : null,
         udate: user.udate ? user.udate : null,

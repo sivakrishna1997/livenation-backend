@@ -17,6 +17,7 @@ export const user = mongoose.model('users', new mongoose.Schema({
     uid: { type: String },
     email_verified: { type: Boolean, default: false },
     preferred_genres: [{ name: { type: String } }],
+    subscription: { type: String, enum: ['free', 'vip', 'gold', 'silver', 'bronze'] },
     active: { type: Boolean, default: true },
     cdate: { type: Date },
     udate: { type: Date }

@@ -11,6 +11,7 @@ export const events = mongoose.model('events', new mongoose.Schema({
     country: { type: String },
     community: { type: String },
     add_to_carousel: { type: Boolean, default: false },
+    featured: { type: Boolean, default: false },
     graphic_content: {
         carousel_poster: { type: String },
         event_poster: { type: String },

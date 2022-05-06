@@ -8,5 +8,6 @@ root.post('/update', event.updateevent);
 root.post('/delete', event.deleteevent);
 root.post('/geteventsforyou', event.geteventsforyou);
 root.post('/geteventsforcarousel', event.geteventsforcarousel);
+root.post('/getfeaturedevents', event.getfeaturedevents);
 
 export default root;

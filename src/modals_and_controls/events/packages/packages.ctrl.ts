@@ -39,8 +39,10 @@ const getpackages = (req: Request, res: Response) => {
         params._id ? query['_id'] = new ObjectId(`${params._id}`) : null;
         params.ticket_id ? query['ticket_id'] = params.ticket_id : null;
 
-
-        packages.find(query).then(
+        packages.aggregate([
+            { $match: query },
+            { $addFields: { selected_packages: 0 } }
+        ]).then(
             (doc: any) => {
                 if (doc) {
                     success(req, res, "Package details!", doc);
