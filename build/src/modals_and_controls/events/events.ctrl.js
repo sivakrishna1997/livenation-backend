@@ -80,6 +80,8 @@ const updateevent = (req, res) => __awaiter(void 0, void 0, void 0, function* ()
         params.community ? setQuery['community'] = params.community : null;
         params.add_to_carousel == true ? setQuery['add_to_carousel'] = true : null;
         params.add_to_carousel == false ? setQuery['add_to_carousel'] = false : null;
+        params.featured == true ? setQuery['featured'] = true : null;
+        params.featured == false ? setQuery['featured'] = false : null;
         params.graphic_content ? setQuery['graphic_content'] = params.graphic_content : null;
         params.about ? setQuery['about'] = params.about : null;
         params.performers ? setQuery['performers'] = params.performers : null;
@@ -205,12 +207,54 @@ const geteventsforcarousel = (req, res) => {
         (0, response_service_1.error)(req, res, '', err);
     }
 };
+const getfeaturedevents = (req, res) => {
+    try {
+        let params = req.body;
+        params.current_date = new Date();
+        user_schema_1.user.findOne({ _id: new mongodb_1.ObjectId(`${params.user_id}`) }).then((userDoc) => {
+            if (!userDoc) {
+                (0, response_service_1.error)(req, res, "User doesn't exists!", "");
+            }
+            else {
+                let eventQuery = {};
+                if (userDoc.preferred_genres.length > 0) {
+                    let genres_names = [];
+                    userDoc.preferred_genres.map((genre) => {
+                        genres_names.push(genre.name);
+                    });
+                    eventQuery['genre'] = { $in: genres_names };
+                }
+                // eventQuery['start_date'] = { $gte: new Date(params.current_date) };
+                eventQuery['end_date'] = { $gte: new Date(params.current_date) };
+                eventQuery['featured'] = true;
+                console.log("eventQuery::::", eventQuery);
+                let required_fields = { _id: 1, concert_title: 1, start_date: 1, end_date: 1, country: 1, concert_type: 1, genre: 1, graphic_content: 1 };
+                events_schema_1.events.find(eventQuery, required_fields).sort('start_date').then((doc) => {
+                    if (!doc) {
+                        (0, response_service_1.error)(req, res, "No events found!", "");
+                    }
+                    else {
+                        (0, response_service_1.success)(req, res, "Events found!", doc);
+                    }
+                }, err => {
+                    (0, response_service_1.error)(req, res, '', err);
+                });
+            }
+        }, err => {
+            (0, response_service_1.error)(req, res, '', err);
+        });
+    }
+    catch (err) {
+        (0, response_service_1.error)(req, res, '', err);
+    }
+};
 exports.default = {
     addevent,
     getevents,
     updateevent,
     deleteevent,
     geteventsforyou,
-    geteventsforcarousel
+    geteventsforcarousel,
+    getfeaturedevents
 };
 //# sourceMappingURL=events.ctrl.js.map

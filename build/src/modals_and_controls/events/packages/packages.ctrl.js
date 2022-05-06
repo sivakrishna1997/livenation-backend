@@ -42,7 +42,10 @@ const getpackages = (req, res) => {
         params.title ? query['title'] = params.title : null;
         params._id ? query['_id'] = new mongodb_1.ObjectId(`${params._id}`) : null;
         params.ticket_id ? query['ticket_id'] = params.ticket_id : null;
-        packages_schema_1.packages.find(query).then((doc) => {
+        packages_schema_1.packages.aggregate([
+            { $match: query },
+            { $addFields: { selected_packages: 0 } }
+        ]).then((doc) => {
             if (doc) {
                 (0, response_service_1.success)(req, res, "Package details!", doc);
             }

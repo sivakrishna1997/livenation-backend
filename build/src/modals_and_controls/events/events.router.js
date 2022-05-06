@@ -35,5 +35,6 @@ root.post('/update', events_ctrl_1.default.updateevent);
 root.post('/delete', events_ctrl_1.default.deleteevent);
 root.post('/geteventsforyou', events_ctrl_1.default.geteventsforyou);
 root.post('/geteventsforcarousel', events_ctrl_1.default.geteventsforcarousel);
+root.post('/getfeaturedevents', events_ctrl_1.default.getfeaturedevents);
 exports.default = root;
 //# sourceMappingURL=events.router.js.map
