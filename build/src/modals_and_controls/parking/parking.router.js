@@ -26,22 +26,12 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
     return (mod && mod.__esModule) ? mod : { "default": mod };
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.parkingticketroot = exports.ticketroot = void 0;
 const express = __importStar(require("express"));
-const ticketroot = express.Router();
-exports.ticketroot = ticketroot;
-const parkingticketroot = express.Router();
-exports.parkingticketroot = parkingticketroot;
-const tickets_ctrl_1 = __importDefault(require("./tickets.ctrl"));
-//tickets
-ticketroot.post('/add', tickets_ctrl_1.default.addticket);
-ticketroot.post('/get', tickets_ctrl_1.default.gettickets);
-ticketroot.post('/update', tickets_ctrl_1.default.updatetickets);
-ticketroot.post('/delete', tickets_ctrl_1.default.deletetickets);
-// parking tickets
-parkingticketroot.post('/add', tickets_ctrl_1.default.addparking_tickets);
-parkingticketroot.post('/get', tickets_ctrl_1.default.getparking_tickets);
-parkingticketroot.post('/update', tickets_ctrl_1.default.updateparking_tickets);
-parkingticketroot.post('/delete', tickets_ctrl_1.default.deleteparking_tickets);
-parkingticketroot.post('/get-ticket-with-parking-details', tickets_ctrl_1.default.getticket_with_parking_details);
-//# sourceMappingURL=tickets.router.js.map
+const root = express.Router();
+const parking_ctrl_1 = __importDefault(require("./parking.ctrl"));
+root.post('/add', parking_ctrl_1.default.addparking);
+root.post('/get', parking_ctrl_1.default.getparking);
+root.post('/update', parking_ctrl_1.default.updateparking);
+root.post('/delete', parking_ctrl_1.default.deleteparking);
+exports.default = root;
+//# sourceMappingURL=parking.router.js.map

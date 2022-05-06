@@ -23,7 +23,7 @@ var __importStar = (this && this.__importStar) || function (mod) {
     return result;
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.tickets = void 0;
+exports.parking_tickets = exports.tickets = void 0;
 const mongoose = __importStar(require("mongoose"));
 exports.tickets = mongoose.model('tickets', new mongoose.Schema({
     concert_id: { type: String, required: true },
@@ -44,6 +44,21 @@ exports.tickets = mongoose.model('tickets', new mongoose.Schema({
                     ticket_code: { type: String },
                     ticket_status: { type: String, enum: ['available', 'hold', 'fastfilling', 'sold', 'cancelled', 'expired'] },
                 }]
+        }],
+    cdate: { type: Date },
+    udate: { type: Date }
+}));
+exports.parking_tickets = mongoose.model('parkingtickets', new mongoose.Schema({
+    ticket_id: { type: String, required: true },
+    price: { type: String },
+    distance: { type: String },
+    parking_id: { type: String },
+    parking_name: { type: String },
+    parking_seats: [{
+            type: { type: String, enum: ['vip', 'vallet', 'normal'] },
+            seat_number: { type: String },
+            ticket_code: { type: String },
+            status: { type: String, enum: ['available', 'hold', 'fastfilling', 'sold', 'cancelled', 'expired'] },
         }],
     cdate: { type: Date },
     udate: { type: Date }

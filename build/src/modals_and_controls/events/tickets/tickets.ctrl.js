@@ -112,10 +112,151 @@ const deletetickets = (req, res) => {
         (0, response_service_1.error)(req, res, '', err);
     }
 };
+//////////////// Parking Tickets Start/////////////////////
+const addparking_tickets = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
+    try {
+        let params = req.body;
+        tickets_schema_1.parking_tickets.findOne({ ticket_id: params.ticket_id, parking_id: params.parking_id }).then((udoc) => __awaiter(void 0, void 0, void 0, function* () {
+            if (udoc) {
+                (0, response_service_1.error)(req, res, 'Parking already exist!', null);
+            }
+            else {
+                params['cdate'] = Date.now();
+                params['udate'] = Date.now();
+                var inputdata = new tickets_schema_1.parking_tickets(params);
+                inputdata.save().then((doc) => {
+                    (0, response_service_1.success)(req, res, 'Parking added successfully!', doc);
+                }, (err) => {
+                    (0, response_service_1.error)(req, res, 'Parking adding failed!', err);
+                });
+            }
+        }), err => {
+            (0, response_service_1.error)(req, res, '', err);
+        });
+    }
+    catch (err) {
+        (0, response_service_1.error)(req, res, '', err);
+    }
+});
+const getparking_tickets = (req, res) => {
+    try {
+        let params = req.body;
+        var query = {};
+        params._id ? query['_id'] = new mongodb_1.ObjectId(`${params._id}`) : null;
+        params.ticket_id ? query['ticket_id'] = params.ticket_id : null;
+        params.parking_id ? query['parking_id'] = params.parking_id : null;
+        params.parking_name ? query['parking_name'] = params.parking_name : null;
+        let removeQuery = {};
+        params.remove_parking_seats ? removeQuery['parking_seats'] = 0 : null;
+        tickets_schema_1.parking_tickets.find(query, removeQuery).then((doc) => {
+            if (doc) {
+                (0, response_service_1.success)(req, res, "Parking Details!", doc);
+            }
+            else {
+                (0, response_service_1.error)(req, res, "Parking Doesn't Exists!", "");
+            }
+        }, err => {
+            (0, response_service_1.error)(req, res, '', err);
+        });
+    }
+    catch (err) {
+        (0, response_service_1.error)(req, res, '', err);
+    }
+};
+const updateparking_tickets = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
+    try {
+        let params = req.body;
+        let basedOn = {};
+        params._id ? basedOn['_id'] = new mongodb_1.ObjectId(`${params._id}`) : null;
+        // params.ticket_id ? basedOn['ticket_id'] = params.ticket_id : null;
+        let setQuery = {};
+        params.price ? setQuery['price'] = params.price : null;
+        params.distance ? setQuery['distance'] = params.distance : null;
+        params.parking_id ? setQuery['parking_id'] = params.parking_id : null;
+        params.parking_name ? setQuery['parking_name'] = params.parking_name : null;
+        params.parking_seats ? setQuery['parking_seats'] = params.parking_seats : null;
+        tickets_schema_1.parking_tickets.findOneAndUpdate(basedOn, { $set: setQuery }).then((udoc) => {
+            if (!udoc) {
+                (0, response_service_1.error)(req, res, "Parking doesn't exists!", null);
+            }
+            else {
+                (0, response_service_1.success)(req, res, "Parking updated successfully!", {});
+            }
+        }, err => {
+            (0, response_service_1.error)(req, res, '', err);
+        });
+    }
+    catch (err) {
+        (0, response_service_1.error)(req, res, '', err);
+    }
+});
+const deleteparking_tickets = (req, res) => {
+    try {
+        let params = req.body;
+        let query = {
+            "_id": new mongodb_1.ObjectId(`${params._id}`)
+        };
+        tickets_schema_1.parking_tickets.findOneAndDelete(query).then((doc) => {
+            if (!doc) {
+                (0, response_service_1.error)(req, res, "Parking doesn't exists!", "");
+            }
+            else {
+                (0, response_service_1.success)(req, res, "Parking deleted successfully!", {});
+            }
+        }, err => {
+            (0, response_service_1.error)(req, res, '', err);
+        });
+    }
+    catch (err) {
+        (0, response_service_1.error)(req, res, '', err);
+    }
+};
+const getticket_with_parking_details = (req, res) => {
+    try {
+        let params = req.body;
+        tickets_schema_1.parking_tickets.aggregate([
+            { $match: { ticket_id: params.ticket_id } },
+            {
+                $lookup: {
+                    from: "parkings",
+                    let: { parking_id: { $toObjectId: "$parking_id" } },
+                    pipeline: [
+                        { $match: { $expr: { $eq: ["$_id", "$$parking_id"] } } },
+                    ],
+                    as: "parking_details"
+                },
+            },
+            {
+                $addFields: { selected_tickets: 0 }
+            },
+            {
+                $unwind: '$parking_details'
+            }
+        ]).then((doc) => {
+            if (doc) {
+                (0, response_service_1.success)(req, res, "Parking details!", doc);
+            }
+            else {
+                (0, response_service_1.error)(req, res, "Parking doesn't exists!", "");
+            }
+        }, err => {
+            (0, response_service_1.error)(req, res, '', err);
+        });
+    }
+    catch (err) {
+        (0, response_service_1.error)(req, res, '', err);
+    }
+};
+//////////////// Parking Tickets End/////////////////////
 exports.default = {
     addticket,
     gettickets,
     updatetickets,
     deletetickets,
+    addparking_tickets,
+    getparking_tickets,
+    updateparking_tickets,
+    deleteparking_tickets,
+    getticket_with_parking_details
 };
 //# sourceMappingURL=tickets.ctrl.js.map
