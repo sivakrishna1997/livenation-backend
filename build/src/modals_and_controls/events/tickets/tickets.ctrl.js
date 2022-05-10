@@ -10,6 +10,7 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
 };
 Object.defineProperty(exports, "__esModule", { value: true });
 const tickets_schema_1 = require("./tickets.schema");
+const packages_schema_1 = require("../packages/packages.schema");
 const response_service_1 = require("../../../service/response.service");
 const mongodb_1 = require("mongodb");
 const addticket = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
@@ -75,6 +76,7 @@ const updatetickets = (req, res) => __awaiter(void 0, void 0, void 0, function* 
         params.end_time ? setQuery['end_time'] = params.end_time : null;
         params.areas ? setQuery['areas'] = params.areas : null;
         params.price ? setQuery["areas.$.price"] = params.price : null;
+        params.price_type ? setQuery["areas.$.price_type"] = params.price_type : null;
         params.points ? setQuery["areas.$.points"] = params.points : null;
         tickets_schema_1.tickets.findOneAndUpdate(basedOn, { $set: setQuery }).then((udoc) => {
             if (!udoc) {
@@ -94,15 +96,16 @@ const updatetickets = (req, res) => __awaiter(void 0, void 0, void 0, function* 
 const deletetickets = (req, res) => {
     try {
         let params = req.body;
-        let query = {
-            "_id": new mongodb_1.ObjectId(`${params._id}`)
-        };
-        tickets_schema_1.tickets.findOneAndDelete(query).then((doc) => {
+        Promise.all([
+            tickets_schema_1.tickets.deleteMany({ _id: new mongodb_1.ObjectId(`${params._id}`) }),
+            tickets_schema_1.parking_tickets.deleteMany({ ticket_id: params._id }),
+            packages_schema_1.packages.deleteMany({ ticket_id: params._id })
+        ]).then((doc) => {
             if (!doc) {
-                (0, response_service_1.error)(req, res, "Tickets doesn't exists!", "");
+                (0, response_service_1.error)(req, res, "Concert doesn't exists!", "");
             }
             else {
-                (0, response_service_1.success)(req, res, "Tickets deleted successfully!", {});
+                (0, response_service_1.success)(req, res, "Concert deleted successfully!", doc);
             }
         }, err => {
             (0, response_service_1.error)(req, res, '', err);
@@ -146,6 +149,7 @@ const getparking_tickets = (req, res) => {
         params.ticket_id ? query['ticket_id'] = params.ticket_id : null;
         params.parking_id ? query['parking_id'] = params.parking_id : null;
         params.parking_name ? query['parking_name'] = params.parking_name : null;
+        params.parking_type ? query['parking_type'] = params.parking_type : null;
         let removeQuery = {};
         params.remove_parking_seats ? removeQuery['parking_seats'] = 0 : null;
         tickets_schema_1.parking_tickets.find(query, removeQuery).then((doc) => {
@@ -168,12 +172,13 @@ const updateparking_tickets = (req, res) => __awaiter(void 0, void 0, void 0, fu
         let params = req.body;
         let basedOn = {};
         params._id ? basedOn['_id'] = new mongodb_1.ObjectId(`${params._id}`) : null;
-        // params.ticket_id ? basedOn['ticket_id'] = params.ticket_id : null;
         let setQuery = {};
         params.price ? setQuery['price'] = params.price : null;
+        params.price_type ? setQuery['price_type'] = params.price_type : null;
         params.distance ? setQuery['distance'] = params.distance : null;
         params.parking_id ? setQuery['parking_id'] = params.parking_id : null;
         params.parking_name ? setQuery['parking_name'] = params.parking_name : null;
+        params.parking_type ? setQuery['parking_type'] = params.parking_type : null;
         params.parking_seats ? setQuery['parking_seats'] = params.parking_seats : null;
         tickets_schema_1.parking_tickets.findOneAndUpdate(basedOn, { $set: setQuery }).then((udoc) => {
             if (!udoc) {

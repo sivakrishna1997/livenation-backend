@@ -10,6 +10,8 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
 };
 Object.defineProperty(exports, "__esModule", { value: true });
 const events_schema_1 = require("./events.schema");
+const tickets_schema_1 = require("./tickets/tickets.schema");
+const packages_schema_1 = require("./packages/packages.schema");
 const response_service_1 = require("../../service/response.service");
 const mongodb_1 = require("mongodb");
 const user_schema_1 = require("../user/user.schema");
@@ -110,16 +112,25 @@ const updateevent = (req, res) => __awaiter(void 0, void 0, void 0, function* ()
 const deleteevent = (req, res) => {
     try {
         let params = req.body;
-        let query = { _id: new mongodb_1.ObjectId(`${params._id}`) };
-        events_schema_1.events.findOneAndDelete(query).then((doc) => {
-            if (!doc) {
-                (0, response_service_1.error)(req, res, "Concert doesn't exists!", "");
-            }
-            else {
-                (0, response_service_1.success)(req, res, "Concert deleted successfully!", {});
-            }
+        tickets_schema_1.tickets.find({ concert_id: params._id }).then((tkts) => {
+            let ticket_ids = tkts.map((tk) => tk._id);
+            Promise.all([
+                tickets_schema_1.tickets.deleteMany({ concert_id: params._id }),
+                events_schema_1.events.deleteOne({ _id: new mongodb_1.ObjectId(`${params._id}`) }),
+                tickets_schema_1.parking_tickets.deleteMany({ ticket_id: { $in: ticket_ids } }),
+                packages_schema_1.packages.deleteMany({ ticket_id: { $in: ticket_ids } })
+            ]).then((doc) => {
+                if (!doc) {
+                    (0, response_service_1.error)(req, res, "Concert doesn't exists!", "");
+                }
+                else {
+                    (0, response_service_1.success)(req, res, "Concert deleted successfully!", doc);
+                }
+            }, err => {
+                (0, response_service_1.error)(req, res, '', err);
+            });
         }, err => {
-            (0, response_service_1.error)(req, res, '', err);
+            (0, response_service_1.error)(req, res, "", err);
         });
     }
     catch (err) {

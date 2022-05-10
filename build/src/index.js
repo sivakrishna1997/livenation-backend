@@ -61,7 +61,8 @@ app.use((0, cors_1.default)());
 //     next();
 // }
 // app.use(allowCrossDomain);
-app.use(express_1.default.json());
+app.use(express_1.default.json({ limit: '500mb' }));
+app.use(express_1.default.urlencoded({ extended: true, limit: '500mb' }));
 //start Passport middleware for authentication
 (0, passport_service_1.default)(passport);
 app.use(passport.initialize());

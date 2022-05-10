@@ -1,4 +1,6 @@
 import { tickets, parking_tickets } from './tickets.schema';
+import { packages } from '../packages/packages.schema';
+
 import { Request, Response } from "express";
 import { success, error } from '../../../service/response.service';
 import { ObjectId } from 'mongodb';
@@ -87,6 +89,7 @@ const updatetickets = async (req: Request, res: Response) => {
         params.areas ? setQuery['areas'] = params.areas : null;
 
         params.price ? setQuery["areas.$.price"] = params.price : null;
+        params.price_type ? setQuery["areas.$.price_type"] = params.price_type : null;
         params.points ? setQuery["areas.$.points"] = params.points : null;
 
 
@@ -113,16 +116,16 @@ const deletetickets = (req: Request, res: Response) => {
     try {
         let params = req.body;
 
-
-        let query: any = {
-            "_id": new ObjectId(`${params._id}`)
-        };
-        tickets.findOneAndDelete(query).then(
+        Promise.all([
+            tickets.deleteMany({ _id: new ObjectId(`${params._id}`) }),
+            parking_tickets.deleteMany({ ticket_id: params._id }),
+            packages.deleteMany({ ticket_id: params._id })
+        ]).then(
             (doc: any) => {
                 if (!doc) {
-                    error(req, res, "Tickets doesn't exists!", "");
+                    error(req, res, "Concert doesn't exists!", "");
                 } else {
-                    success(req, res, "Tickets deleted successfully!", {});
+                    success(req, res, "Concert deleted successfully!", doc);
                 }
             }, err => {
                 error(req, res, '', err)
@@ -131,10 +134,6 @@ const deletetickets = (req: Request, res: Response) => {
         error(req, res, '', err)
     }
 }
-
-
-
-
 
 
 
@@ -205,10 +204,10 @@ const updateparking_tickets = async (req: Request, res: Response) => {
 
         let basedOn: any = {};
         params._id ? basedOn['_id'] = new ObjectId(`${params._id}`) : null;
-        // params.ticket_id ? basedOn['ticket_id'] = params.ticket_id : null;
 
         let setQuery: any = {};
         params.price ? setQuery['price'] = params.price : null;
+        params.price_type ? setQuery['price_type'] = params.price_type : null;
         params.distance ? setQuery['distance'] = params.distance : null;
         params.parking_id ? setQuery['parking_id'] = params.parking_id : null;
         params.parking_name ? setQuery['parking_name'] = params.parking_name : null;

@@ -65,6 +65,7 @@ const updatepackage = async (req: Request, res: Response) => {
 
         params.title ? setQuery['title'] = params.title : null;
         params.price ? setQuery['price'] = params.price : null;
+        params.price_type ? setQuery['price_type'] = params.price_type : null;
         params.equivalent_points ? setQuery['equivalent_points'] = params.equivalent_points : null;
         params.available_quantity ? setQuery['available_quantity'] = params.available_quantity : null;
         params.inclusions ? setQuery['inclusions'] = params.inclusions : null;

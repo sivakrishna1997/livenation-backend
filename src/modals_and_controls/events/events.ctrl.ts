@@ -1,4 +1,7 @@
 import { events } from './events.schema';
+import { tickets, parking_tickets } from './tickets/tickets.schema';
+import { packages } from './packages/packages.schema';
+
 import { Request, Response } from "express";
 import { success, error } from '../../service/response.service';
 import { ObjectId } from 'mongodb';
@@ -119,17 +122,28 @@ const updateevent = async (req: Request, res: Response) => {
 const deleteevent = (req: Request, res: Response) => {
     try {
         let params = req.body;
-        let query: any = { _id: new ObjectId(`${params._id}`) };
-        events.findOneAndDelete(query).then(
-            (doc: any) => {
-                if (!doc) {
-                    error(req, res, "Concert doesn't exists!", "");
-                } else {
-                    success(req, res, "Concert deleted successfully!", {});
-                }
+        tickets.find({ concert_id: params._id }).then(
+            (tkts: any) => {
+                let ticket_ids = tkts.map((tk: any) => tk._id);
+                Promise.all([
+                    tickets.deleteMany({ concert_id: params._id }),
+                    events.deleteOne({ _id: new ObjectId(`${params._id}`) }),
+                    parking_tickets.deleteMany({ ticket_id: { $in: ticket_ids } }),
+                    packages.deleteMany({ ticket_id: { $in: ticket_ids } })
+                ]).then(
+                    (doc: any) => {
+                        if (!doc) {
+                            error(req, res, "Concert doesn't exists!", "");
+                        } else {
+                            success(req, res, "Concert deleted successfully!", doc);
+                        }
+                    }, err => {
+                        error(req, res, '', err)
+                    })
             }, err => {
-                error(req, res, '', err)
+                error(req, res, "", err);
             })
+
     } catch (err) {
         error(req, res, '', err)
     }

@@ -37,6 +37,7 @@ exports.tickets = mongoose.model('tickets', new mongoose.Schema({
     areas: [{
             area: { type: String },
             price: { type: String },
+            price_type: { type: String },
             points: { type: String },
             rows: [{
                     row_letter: { type: String },
@@ -51,9 +52,11 @@ exports.tickets = mongoose.model('tickets', new mongoose.Schema({
 exports.parking_tickets = mongoose.model('parkingtickets', new mongoose.Schema({
     ticket_id: { type: String, required: true },
     price: { type: String },
+    price_type: { type: String },
     distance: { type: String },
     parking_id: { type: String },
     parking_name: { type: String },
+    parking_type: { type: String },
     parking_seats: [{
             type: { type: String, enum: ['vip', 'vallet', 'normal'] },
             seat_number: { type: String },

@@ -38,6 +38,9 @@ export const events = mongoose.model('events', new mongoose.Schema({
         }
     ],
     status: { type: String, enum: ['pending', 'approved', 'rejected'], default: 'pending' },
+
+
+
     cdate: { type: Date },
     udate: { type: Date }
 })
