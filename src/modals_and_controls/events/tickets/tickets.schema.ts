@@ -36,6 +36,7 @@ export const parking_tickets = mongoose.model('parkingtickets', new mongoose.Sch
     distance: { type: String },
     parking_id: { type: String },
     parking_name: { type: String },
+    parking_type: { type: String },
     parking_seats: [{
         type: { type: String, enum: ['vip', 'vallet', 'normal'] }, // vip, vallet, normal
         seat_number: { type: String },

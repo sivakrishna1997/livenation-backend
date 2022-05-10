@@ -178,6 +178,7 @@ const getparking_tickets = (req: Request, res: Response) => {
         params.ticket_id ? query['ticket_id'] = params.ticket_id : null;
         params.parking_id ? query['parking_id'] = params.parking_id : null;
         params.parking_name ? query['parking_name'] = params.parking_name : null;
+        params.parking_type ? query['parking_type'] = params.parking_type : null;
 
 
         let removeQuery: any = {};
@@ -211,6 +212,7 @@ const updateparking_tickets = async (req: Request, res: Response) => {
         params.distance ? setQuery['distance'] = params.distance : null;
         params.parking_id ? setQuery['parking_id'] = params.parking_id : null;
         params.parking_name ? setQuery['parking_name'] = params.parking_name : null;
+        params.parking_type ? setQuery['parking_type'] = params.parking_type : null;
         params.parking_seats ? setQuery['parking_seats'] = params.parking_seats : null;
 
         parking_tickets.findOneAndUpdate(basedOn, { $set: setQuery }).then(
