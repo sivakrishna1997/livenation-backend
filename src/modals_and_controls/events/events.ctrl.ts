@@ -22,38 +22,18 @@ const addevent = async (req: Request, res: Response) => {
                 error(req, res, 'Concert adding failed!', err);
             }
         )
-
     } catch (err) {
         error(req, res, '', err)
     }
 }
 
 
-const getevents = (req: Request, res: Response) => {
+const geteventbyid = (req: Request, res: Response) => {
     try {
         let params = req.body;
         var query: any = {};
-
         params._id ? query['_id'] = new ObjectId(`${params._id}`) : null;
-        params.concert_title ? query['concert_title'] = params.concert_title : null;
-        params.concert_type ? query['concert_type'] = params.concert_type : null;
-        params.main_artist ? query['main_artist'] = params.main_artist : null;
-        params.capacity ? query['capacity'] = params.capacity : null;
-        params.genre ? query['genre'] = params.genre : null;
-        params.country ? query['country'] = params.country : null;
-        params.community ? query['community'] = params.community : null;
-
-        params.artist_name ? query['performers'] = { $elemMatch: { artist_name: params.artist_name } } : null;
-        params.venue_name ? query['venues'] = { $elemMatch: { venue_name: params.venue_name } } : null;
-        params.start_date ? query['start_date'] = params.start_date : null;
-        params.end_date ? query['end_date'] = params.end_date : null;
-        params.between_dates ? query['$or'] = [{
-            start_date: { $gte: new Date(params.between_dates.start_date), $lt: new Date(params.between_dates.end_date) }
-        }, {
-            end_date: { $gt: new Date(params.between_dates.start_date), $lte: new Date(params.between_dates.end_date) }
-        }] : null
-
-        events.find(query).then(
+        events.findOne(query).then(
             (doc: any) => {
                 if (doc) {
                     success(req, res, "Concert Details!", doc);
@@ -67,6 +47,48 @@ const getevents = (req: Request, res: Response) => {
         error(req, res, '', err)
     }
 }
+const getevents = (req: Request, res: Response) => {
+    try {
+        let params = req.body;
+        var query: any = {};
+
+        params._id ? query['_id'] = new ObjectId(`${params._id}`) : null;
+        params.concert_title ? query['concert_title'] = params.concert_title : null;
+        params.concert_type ? query['concert_type'] = params.concert_type : null;
+        params.main_artist ? query['main_artist'] = new ObjectId(`${params.main_artist}`) : null;
+        params.capacity ? query['capacity'] = params.capacity : null;
+        params.genre ? query['genre'] = new ObjectId(`${params.genre}`) : null;
+        params.country ? query['country'] = params.country : null;
+        params.community ? query['community'] = new ObjectId(`${params.community}`) : null;
+
+        params.start_date ? query['start_date'] = params.start_date : null;
+        params.end_date ? query['end_date'] = params.end_date : null;
+        params.between_dates ? query['$or'] = [{
+            start_date: { $gte: new Date(params.between_dates.start_date), $lt: new Date(params.between_dates.end_date) }
+        }, {
+            end_date: { $gt: new Date(params.between_dates.start_date), $lte: new Date(params.between_dates.end_date) }
+        }] : null
+
+        events.find(query)
+            .populate('venues', { _id: 1, name: 1, location: 1 })
+            .populate('main_artist', { _id: 1, name: 1, photo_url: 1 })
+            .populate('performers', { _id: 1, name: 1, photo_url: 1 })
+            .populate('genre', { _id: 1, name: 1 })
+            .populate('community', { _id: 1, name: 1 })
+            .then(
+                (doc: any) => {
+                    if (doc) {
+                        success(req, res, "Concert Details!", doc);
+                    } else {
+                        error(req, res, "Concert Doesn't Exists!", "");
+                    }
+                }, err => {
+                    error(req, res, '', err)
+                })
+    } catch (err) {
+        error(req, res, '', err)
+    }
+}
 
 const updateevent = async (req: Request, res: Response) => {
     try {
@@ -74,13 +96,13 @@ const updateevent = async (req: Request, res: Response) => {
         let setQuery: any = {};
         params.concert_title ? setQuery['concert_title'] = params.concert_title : null;
         params.concert_type ? setQuery['concert_type'] = params.concert_type : null;
-        params.main_artist ? setQuery['main_artist'] = params.main_artist : null;
+        params.main_artist ? setQuery['main_artist'] = new ObjectId(`${params.main_artist}`) : null;
         params.capacity ? setQuery['capacity'] = params.capacity : null;
-        params.genre ? setQuery['genre'] = params.genre : null;
+        params.genre ? setQuery['genre'] = new ObjectId(`${params.genre}`) : null;
         params.start_date ? setQuery['start_date'] = params.start_date : null;
         params.end_date ? setQuery['end_date'] = params.end_date : null;
         params.country ? setQuery['country'] = params.country : null;
-        params.community ? setQuery['community'] = params.community : null;
+        params.community ? setQuery['community'] = new ObjectId(`${params.community}`) : null;
 
         params.add_to_carousel == true ? setQuery['add_to_carousel'] = true : null;
         params.add_to_carousel == false ? setQuery['add_to_carousel'] = false : null;
@@ -300,6 +322,7 @@ const getfeaturedevents = (req: Request, res: Response) => {
 export default {
     addevent,
     getevents,
+    geteventbyid,
     updateevent,
     deleteevent,
     geteventsforyou,

@@ -3,13 +3,10 @@ import * as mongoose from 'mongoose';
 export const events = mongoose.model('events', new mongoose.Schema({
     concert_title: { type: String, required: true, trim: true, index: true },
     concert_type: { type: String, required: true, trim: true },
-    main_artist: { type: String, required: true },
     capacity: { type: String },
-    genre: { type: String, required: true },
     start_date: { type: Date, required: true },
     end_date: { type: Date, required: true },
     country: { type: String },
-    community: { type: String },
     add_to_carousel: { type: Boolean, default: false },
     featured: { type: Boolean, default: false },
     graphic_content: {
@@ -19,18 +16,13 @@ export const events = mongoose.model('events', new mongoose.Schema({
         video_url: { type: String },
     },
     about: { type: String },
-    performers: [
-        {
-            artist_id: { type: String },
-            artist_name: { type: String }
-        }
-    ],
-    venues: [
-        {
-            venue_id: { type: String },
-            venue_name: { type: String }
-        }
-    ],
+
+    main_artist: { type: mongoose.Schema.Types.ObjectId, ref: "artists", required: true },
+    genre: { type: mongoose.Schema.Types.ObjectId, ref: "genres", required: true },
+    community: { type: mongoose.Schema.Types.ObjectId, ref: "communities" },
+    performers: [{ type: mongoose.Schema.Types.ObjectId, ref: "artists" }],
+    venues: [{ type: mongoose.Schema.Types.ObjectId, ref: "venues" }],
+
     additional_info: [
         {
             title: { type: String },
@@ -38,8 +30,6 @@ export const events = mongoose.model('events', new mongoose.Schema({
         }
     ],
     status: { type: String, enum: ['pending', 'approved', 'rejected'], default: 'pending' },
-
-
 
     cdate: { type: Date },
     udate: { type: Date }

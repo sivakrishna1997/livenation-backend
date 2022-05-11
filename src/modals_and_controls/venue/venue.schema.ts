@@ -5,12 +5,7 @@ export const venues = mongoose.model('venues', new mongoose.Schema({
     location: { type: String, index: true },
     capacity: { type: String },
     stage_layout: { type: String },
-    stages: [
-        {
-            stage_id: { type: String },
-            stage_name: { type: String }
-        }
-    ],
+    stages: [{ type: mongoose.Schema.Types.ObjectId, ref: "stages" }],
     seats: [
         {
             name: { type: String, trim: true },

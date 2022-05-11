@@ -34,11 +34,8 @@ const gettickets = (req: Request, res: Response) => {
         var query: any = {};
 
         params._id ? query['_id'] = new ObjectId(`${params._id}`) : null;
-        params.concert_id ? query['concert_id'] = params.concert_id : null;
-        params.concert_title ? query['concert_title'] = params.concert_title : null;
-
-        params.concert_venue_id ? query['concert_venue_id'] = params.concert_venue_id : null;
-        params.concert_venue_name ? query['concert_venue_name'] = params.concert_venue_name : null;
+        params.concert ? query['concert'] = new ObjectId(`${params.concert}`) : null;
+        params.venue ? query['venue'] = new ObjectId(`${params.venue}`) : null;
 
         params.event_date ? query['event_date'] = params.event_date : null;
         params.stage_setup ? query['stage_setup'] = params.stage_setup : null;
@@ -47,27 +44,29 @@ const gettickets = (req: Request, res: Response) => {
 
         params.event_date_gt ? query['event_date'] = { $gte: new Date(params.event_date_gt) } : null;
 
-        // params.area_id ? query['areas'] = { $elemMatch: { _id: new ObjectId(`${params.area_id}`) } } : null;
-
-
         let removeQuery: any = {};
         params.remove_areas ? removeQuery['areas'] = 0 : null;
         params.remove_rows ? removeQuery['areas.rows'] = 0 : null;
 
-        tickets.find(query, removeQuery).then(
-            (doc: any) => {
-                if (doc) {
-                    success(req, res, "Ticket Details!", doc);
-                } else {
-                    error(req, res, "Ticket Doesn't Exists!", "");
-                }
-            }, err => {
-                error(req, res, '', err)
-            })
+        tickets.find(query, removeQuery)
+            .populate('concert')
+            .populate('venue')
+            .then(
+                (doc: any) => {
+                    if (doc) {
+                        success(req, res, "Ticket Details!", doc);
+                    } else {
+                        error(req, res, "Ticket Doesn't Exists!", "");
+                    }
+                }, err => {
+                    error(req, res, '', err)
+                })
     } catch (err) {
         error(req, res, '', err)
     }
 }
+
+
 
 const updatetickets = async (req: Request, res: Response) => {
     try {
@@ -76,8 +75,8 @@ const updatetickets = async (req: Request, res: Response) => {
         let basedOn: any = {};
         params._id ? basedOn['_id'] = new ObjectId(`${params._id}`) : null;
 
-        params.concert_id ? basedOn['concert_id'] = params.concert_id : null;
-        params.concert_venue_id ? basedOn['concert_venue_id'] = params.concert_venue_id : null;
+        params.concert ? basedOn['concert'] = new ObjectId(`${params.concert}`) : null;
+        params.venue ? basedOn['venue'] = new ObjectId(`${params.venue}`) : null;
         params.stage_setup ? basedOn['stage_setup'] = params.stage_setup : null;
 
         params.area_id ? basedOn['areas'] = { $elemMatch: { _id: new ObjectId(`${params.area_id}`) } } : null;
@@ -142,7 +141,7 @@ const deletetickets = (req: Request, res: Response) => {
 const addparking_tickets = async (req: Request, res: Response) => {
     try {
         let params = req.body;
-        parking_tickets.findOne({ ticket_id: params.ticket_id, parking_id: params.parking_id }).then(
+        parking_tickets.findOne({ ticket: new ObjectId(`${params.ticket}`), parking: new ObjectId(`${params.parking}`) }).then(
             async (udoc) => {
                 if (udoc) {
                     error(req, res, 'Parking already exist!', null)
@@ -174,25 +173,26 @@ const getparking_tickets = (req: Request, res: Response) => {
         var query: any = {};
 
         params._id ? query['_id'] = new ObjectId(`${params._id}`) : null;
-        params.ticket_id ? query['ticket_id'] = params.ticket_id : null;
-        params.parking_id ? query['parking_id'] = params.parking_id : null;
-        params.parking_name ? query['parking_name'] = params.parking_name : null;
+        params.ticket ? query['ticket'] = new ObjectId(`${params.ticket}`) : null;
+        params.parking ? query['parking'] = new ObjectId(`${params.parking}`) : null;
         params.parking_type ? query['parking_type'] = params.parking_type : null;
 
 
         let removeQuery: any = {};
         params.remove_parking_seats ? removeQuery['parking_seats'] = 0 : null;
 
-        parking_tickets.find(query, removeQuery).then(
-            (doc: any) => {
-                if (doc) {
-                    success(req, res, "Parking Details!", doc);
-                } else {
-                    error(req, res, "Parking Doesn't Exists!", "");
-                }
-            }, err => {
-                error(req, res, '', err)
-            })
+        parking_tickets.find(query, removeQuery)
+            .populate('parking')
+            .then(
+                (doc: any) => {
+                    if (doc) {
+                        success(req, res, "Parking Details!", doc);
+                    } else {
+                        error(req, res, "Parking Doesn't Exists!", "");
+                    }
+                }, err => {
+                    error(req, res, '', err)
+                })
     } catch (err) {
         error(req, res, '', err)
     }
@@ -209,8 +209,7 @@ const updateparking_tickets = async (req: Request, res: Response) => {
         params.price ? setQuery['price'] = params.price : null;
         params.price_type ? setQuery['price_type'] = params.price_type : null;
         params.distance ? setQuery['distance'] = params.distance : null;
-        params.parking_id ? setQuery['parking_id'] = params.parking_id : null;
-        params.parking_name ? setQuery['parking_name'] = params.parking_name : null;
+        params.parking ? setQuery['parking'] = new ObjectId(`${params.parking}`) : null;
         params.parking_type ? setQuery['parking_type'] = params.parking_type : null;
         params.parking_seats ? setQuery['parking_seats'] = params.parking_seats : null;
 

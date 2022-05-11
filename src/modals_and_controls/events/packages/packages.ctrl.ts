@@ -37,7 +37,7 @@ const getpackages = (req: Request, res: Response) => {
         var query: any = {};
         params.title ? query['title'] = params.title : null;
         params._id ? query['_id'] = new ObjectId(`${params._id}`) : null;
-        params.ticket_id ? query['ticket_id'] = params.ticket_id : null;
+        params.ticket ? query['ticket'] = new ObjectId(`${params.ticket}`) : null;
 
         packages.aggregate([
             { $match: query },

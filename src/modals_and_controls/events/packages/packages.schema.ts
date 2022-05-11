@@ -1,7 +1,7 @@
 import * as mongoose from 'mongoose';
 
 export const packages = mongoose.model('packages', new mongoose.Schema({
-    ticket_id: { type: String, required: true },
+    ticket: { type: mongoose.Schema.Types.ObjectId, ref: "tickets", required: true },
     title: { type: String, required: true, trim: true, index: true },
     price: { type: String },
     price_type: { type: String },

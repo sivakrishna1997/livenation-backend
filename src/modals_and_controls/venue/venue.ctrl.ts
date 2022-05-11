@@ -45,16 +45,18 @@ const getvenues = (req: Request, res: Response) => {
         params.location ? query['location'] = params.location : null;
         params.capacity ? query['capacity'] = params.capacity : null;
 
-        venues.find(query).then(
-            (doc: any) => {
-                if (doc) {
-                    success(req, res, "Venue Details!", doc);
-                } else {
-                    error(req, res, "Venue Doesn't Exists!", "");
-                }
-            }, err => {
-                error(req, res, '', err)
-            })
+        venues.find(query)
+            .populate('stages', { _id: 1, name: 1 })
+            .then(
+                (doc: any) => {
+                    if (doc) {
+                        success(req, res, "Venue Details!", doc);
+                    } else {
+                        error(req, res, "Venue Doesn't Exists!", "");
+                    }
+                }, err => {
+                    error(req, res, '', err)
+                })
     } catch (err) {
         error(req, res, '', err)
     }

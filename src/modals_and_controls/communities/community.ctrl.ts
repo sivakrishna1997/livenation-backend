@@ -8,7 +8,7 @@ import { ObjectId } from 'mongodb';
 const addcommunity = async (req: Request, res: Response) => {
     try {
         let params = req.body;
-        communities.findOne({ community_name: params.community_name }).then(
+        communities.findOne({ name: params.name }).then(
             async (udoc) => {
                 if (udoc) {
                     error(req, res, 'Community Name already exist!', null)
@@ -39,7 +39,7 @@ const getcommunity = (req: Request, res: Response) => {
     try {
         let params = req.body;
         var query: any = {};
-        params.community_name ? query['community_name'] = params.community_name : null;
+        params.name ? query['name'] = params.name : null;
         params._id ? query['_id'] = new ObjectId(`${params._id}`) : null;
         communities.find(query).then(
             (doc: any) => {
@@ -62,7 +62,7 @@ const updatecommunity = async (req: Request, res: Response) => {
 
         let setQuery: any = {};
 
-        params.community_name ? setQuery['community_name'] = params.community_name : null;
+        params.name ? setQuery['name'] = params.name : null;
         setQuery['udate'] = Date.now();
 
         communities.findOneAndUpdate(
