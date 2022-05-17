@@ -5,7 +5,9 @@ export default function mongodb() {
         dbName: 'livenation',
         autoIndex: true,
         useUnifiedTopology: true,
-        useNewUrlParser: true
+        useNewUrlParser: true,
+        useFindAndModify: true,
+        useCreateIndex: true,
     }
     let url = "mongodb://localhost:27017/livenation";
     // let url = "mongodb+srv://tal:tal@cluster0.jmvgw.mongodb.net/livenation";

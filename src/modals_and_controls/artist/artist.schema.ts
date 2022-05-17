@@ -1,6 +1,6 @@
 import * as mongoose from 'mongoose';
 
-export const artist = mongoose.model('artist', new mongoose.Schema({
+export const artist = mongoose.model('artists', new mongoose.Schema({
     name: { type: String, required: true, trim: true, index: true },
     description: { type: String },
     photo_url: { type: String },

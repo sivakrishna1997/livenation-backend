@@ -1,10 +1,10 @@
 import * as mongoose from 'mongoose';
 
 export const tickets = mongoose.model('tickets', new mongoose.Schema({
-    concert_id: { type: String, required: true },
-    concert_title: { type: String, required: true, trim: true },
-    concert_venue_id: { type: String, required: true },
-    concert_venue_name: { type: String, required: true, trim: true },
+
+    concert: { type: mongoose.Schema.Types.ObjectId, ref: "events", required: true },
+    venue: { type: mongoose.Schema.Types.ObjectId, ref: "venues", required: true },
+
     stage_setup: { type: String, trim: true },
     event_date: { type: Date, required: true },
     start_time: { type: String, trim: true },
@@ -32,12 +32,14 @@ export const tickets = mongoose.model('tickets', new mongoose.Schema({
 
 
 export const parking_tickets = mongoose.model('parkingtickets', new mongoose.Schema({
-    ticket_id: { type: String, required: true },
+
+    ticket: { type: mongoose.Schema.Types.ObjectId, ref: "tickets", required: true },
+    parking: { type: mongoose.Schema.Types.ObjectId, ref: "parkings" },
+
     price: { type: String },
     price_type: { type: String },
     distance: { type: String },
-    parking_id: { type: String },
-    parking_name: { type: String },
+
     parking_type: { type: String },
     parking_seats: [{
         type: { type: String, enum: ['vip', 'vallet', 'normal'] }, // vip, vallet, normal
