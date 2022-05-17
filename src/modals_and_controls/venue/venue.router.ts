@@ -10,14 +10,6 @@ venueroot.post('/get', venueAndStagesCtrls.getvenues);
 venueroot.post('/update', venueAndStagesCtrls.updatevenues);
 venueroot.post('/delete', venueAndStagesCtrls.deletevenue);
 
-//venue stages
-venueroot.post('/add/stage', venueAndStagesCtrls.addvenuestages);
-venueroot.post('/delete/stage', venueAndStagesCtrls.deletevenuestages);
-
-//venue seats
-venueroot.post('/add/seat', venueAndStagesCtrls.addvenueseats);
-venueroot.post('/delete/seat', venueAndStagesCtrls.deletevenueseats);
-
 
 //stages
 stageroot.post('/add', venueAndStagesCtrls.addstages);

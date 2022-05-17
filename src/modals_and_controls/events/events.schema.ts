@@ -12,7 +12,6 @@ export const events = mongoose.model('events', new mongoose.Schema({
     graphic_content: {
         carousel_poster: { type: String },
         event_poster: { type: String },
-        banner_poster: { type: String },
         video_url: { type: String },
     },
     about: { type: String },

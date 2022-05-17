@@ -21,10 +21,8 @@ const cloudinaryImageUploadMethod = async (file: any) => {
         }
         cloud.uploader.upload(file.tempFilePath, query, (err, res: any) => {
             if (err) {
-                console.log("file image upload err:::::::", err)
                 reject(null);
             } else {
-                console.log("file image upload res:::::::", res)
                 let response: any = {}
                 res.secure_url ? response['url'] = res.secure_url : "";
                 res.public_id ? response['publicid'] = res.public_id : "";
@@ -55,7 +53,6 @@ const uploadimages = async (req: Request | any, res: Response, next: NextFunctio
     try {
         let images: any = [];
         const files = req.files.images;
-        console.log("files multiple", files);
         if (Array.isArray(files)) {
             for (const file of files) {
                 let response: any = await cloudinaryImageUploadMethod(file);
@@ -68,7 +65,6 @@ const uploadimages = async (req: Request | any, res: Response, next: NextFunctio
             if (response) images.push({ url: response.url, publicid: response.publicid, name: files.name.split(".")[0], filetype: files.mimetype });
         }
         req.body.images = images;
-        console.log("req.body.images ", req.body.images)
         next();
     }
     catch (err) {
@@ -106,10 +102,8 @@ const cloudinaryImageDeleteMethod = async (imageid: any) => {
     return new Promise((resolve, reject) => {
         cloud.uploader.destroy(imageid, { invalidate: true, resource_type: "image" }, (err, res) => {
             if (err) {
-                console.log('error : ', err)
                 reject(null);
             } else {
-                console.log('response : ', res)
                 resolve(res)
             }
         }
@@ -120,7 +114,6 @@ const cloudinaryImageDeleteMethod = async (imageid: any) => {
 const deleteimage = async (req: Request | any, res: Response, next: NextFunction) => {
     try {
         var id = req.body.carousalCloudId;
-        console.log('id : ', id);
         const url = await cloudinaryImageDeleteMethod(id);
         if (url) {
             req.body.image = { res };
@@ -135,7 +128,6 @@ const deleteimage = async (req: Request | any, res: Response, next: NextFunction
 
 const uploadandgeturl = async (req: Request | any, res: Response, next: NextFunction) => {
     try {
-        console.log(" req.files:: ", req.files)
         var file = req.files.image;
         let response: any = await cloudinaryImageUploadMethod(file);
         if (response) {

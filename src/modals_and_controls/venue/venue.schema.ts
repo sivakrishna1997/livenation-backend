@@ -1,7 +1,7 @@
 import * as mongoose from 'mongoose';
 
 export const venues = mongoose.model('venues', new mongoose.Schema({
-    name: { type: String, required: true, trim: true, index: true },
+    name: { type: String, required: true, trim: true, index: true, unique: true },
     location: { type: String, index: true },
     capacity: { type: String },
     stage_layout: { type: String },

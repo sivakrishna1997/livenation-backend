@@ -93,7 +93,6 @@ const userlogin = async (req: Request, res: Response) => {
             async (doc: any) => {
                 if (doc) {
                     let passwordMatch = await commonService.comparePassword(req.body.password, doc.password);
-
                     if (!passwordMatch) {
                         error(req, res, "Password Doesn't Match!", "");
                         return null;
@@ -119,7 +118,6 @@ const sendUserWithToken = async (req: Request, res: Response, doc: any, message:
         token: await commonService.newToken(payload),
         user: userformatter(doc)
     }
-    console.log("res obj", responseObj);
     success(req, res, message, responseObj);
 }
 
@@ -132,6 +130,7 @@ const getuser = (req: Request, res: Response) => {
         params.username ? query['username'] = params.username : null;
         params.mobile ? query['mobile'] = params.mobile : null;
         params._id ? query['_id'] = new ObjectId(`${params._id}`) : null;
+        params.role ? query['role'] = params.role : null;
         user.findOne(query, { password: 0 }).then(
             (doc: any) => {
                 if (doc) {
@@ -234,6 +233,7 @@ const updateuser = async (req: Request, res: Response) => {
 
         params.firstname ? setQuery['firstname'] = params.firstname : null;
         params.lastname ? setQuery['lastname'] = params.lastname : null;
+        params.email ? setQuery['email'] = params.email : null;
         params.username ? setQuery['username'] = params.username : null;
         params.mobile ? setQuery['mobile'] = params.mobile : null;
         params.gender ? setQuery['gender'] = params.gender : null;
@@ -243,7 +243,14 @@ const updateuser = async (req: Request, res: Response) => {
         params.uid ? setQuery['uid'] = params.uid : null;
         params.photo_url ? setQuery['photo_url'] = params.photo_url : null;
         params.preferred_genres ? setQuery['preferred_genres'] = params.preferred_genres : null;
-        // params.active ? setQuery['active'] = true : setQuery['active'] = false;
+        params.subscription ? setQuery['subscription'] = params.subscription : null;
+
+        params.terms_conditions == true ? setQuery['terms_conditions'] = true : null;
+        params.terms_conditions == false ? setQuery['terms_conditions'] = false : null;
+
+        params.email_verified == true ? setQuery['email_verified'] = true : null;
+        params.email_verified == false ? setQuery['email_verified'] = false : null;
+
         setQuery['udate'] = Date.now();
 
         user.findOneAndUpdate(query, { $set: setQuery }).then(

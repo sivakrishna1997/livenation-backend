@@ -45,18 +45,16 @@ const getvenues = (req: Request, res: Response) => {
         params.location ? query['location'] = params.location : null;
         params.capacity ? query['capacity'] = params.capacity : null;
 
-        venues.find(query)
-            .populate('stages', { _id: 1, name: 1 })
-            .then(
-                (doc: any) => {
-                    if (doc) {
-                        success(req, res, "Venue Details!", doc);
-                    } else {
-                        error(req, res, "Venue Doesn't Exists!", "");
-                    }
-                }, err => {
-                    error(req, res, '', err)
-                })
+        venues.find(query).populate('stages')
+            .then((doc: any) => {
+                if (doc) {
+                    success(req, res, "Venue Details!", doc);
+                } else {
+                    error(req, res, "Venue Doesn't Exists!", "");
+                }
+            }, err => {
+                error(req, res, '', err)
+            })
     } catch (err) {
         error(req, res, '', err)
     }
@@ -118,147 +116,11 @@ const deletevenue = (req: Request, res: Response) => {
 }
 
 
-
-const addvenuestages = async (req: Request, res: Response) => {
-    try {
-        let params = req.body;
-        let query: any = {
-            _id: new ObjectId(`${params._id}`),
-        }
-
-        let stage = {
-            stage_id: params.stage_id,
-            stage_name: params.stage_name,
-        }
-        venues.findOneAndUpdate(query, { $push: { stages: stage } })
-            .then(
-                (udoc: any) => {
-                    if (udoc) {
-                        if (udoc.n == 0) {
-                            error(req, res, "Venue stage adding failed!", null);
-                        } else {
-                            success(req, res, "Venue stage added successfully!", {});
-                        }
-                    } else {
-                        error(req, res, "Venue doesn't exists!", null);
-                    }
-                }, err => {
-                    error(req, res, '', err);
-                }
-            )
-
-    } catch (err) {
-        error(req, res, '', err)
-    }
-}
-
-const deletevenuestages = (req: Request, res: Response) => {
-    try {
-        let params = req.body;
-        let query: any = {
-            _id: new ObjectId(`${params._id}`),
-        }
-
-        let stage = {
-            _id: new ObjectId(`${params.venue_stage_id}`),
-        }
-        venues.findOneAndUpdate(query, { $pull: { stages: stage } })
-            .then(
-                (udoc: any) => {
-                    if (udoc) {
-                        if (udoc.n == 0) {
-                            error(req, res, "Venue stage deleting failed!", null);
-                        } else {
-                            success(req, res, "Venue stage deleted successfully!", {});
-                        }
-                    } else {
-                        error(req, res, "Venue doesn't exists!", null);
-                    }
-                }, err => {
-                    error(req, res, '', err);
-                }
-            )
-
-    } catch (err) {
-        error(req, res, '', err)
-    }
-}
-
-
-const addvenueseats = async (req: Request, res: Response) => {
-    try {
-        let params = req.body;
-        let query: any = {
-            _id: new ObjectId(`${params._id}`),
-        }
-
-        let seat: any = {}
-        params.name ? seat['name'] = params.name : null;
-        params.image ? seat['image'] = params.image : null;
-
-        venues.findOneAndUpdate(query, { $push: { seats: seat } })
-            .then((udoc: any) => {
-                if (udoc) {
-                    if (udoc.n == 0) {
-                        error(req, res, "Venue seat adding failed!", null);
-                    } else {
-                        success(req, res, "Venue seat added successfully!", {});
-                    }
-                } else {
-                    error(req, res, "Venue doesn't exists!", null);
-                }
-            }, err => {
-                error(req, res, '', err);
-            }
-            )
-
-    } catch (err) {
-        error(req, res, '', err)
-    }
-}
-
-const deletevenueseats = (req: Request, res: Response) => {
-    try {
-        let params = req.body;
-        let query: any = {
-            _id: new ObjectId(`${params._id}`),
-        }
-
-        let seat = {
-            _id: new ObjectId(`${params.venue_seat_id}`),
-        }
-        venues.findOneAndUpdate(query, { $pull: { seats: seat } })
-            .then(
-                (udoc: any) => {
-                    if (udoc) {
-                        if (udoc.n == 0) {
-                            error(req, res, "Venue seat deleting failed!", null);
-                        } else {
-                            success(req, res, "Venue seat deleted successfully!", {});
-                        }
-                    } else {
-                        error(req, res, "Venue doesn't exists!", null);
-                    }
-                }, err => {
-                    error(req, res, '', err);
-                }
-            )
-
-    } catch (err) {
-        error(req, res, '', err)
-    }
-}
-
-
 // =================== venue ====================== // 
 
 
 
-
-
-
 // =================== stages ====================== // 
-
 
 const addstages = async (req: Request, res: Response) => {
     try {
@@ -310,6 +172,7 @@ const getstages = (req: Request, res: Response) => {
         error(req, res, '', err)
     }
 }
+
 
 const updatestages = async (req: Request, res: Response) => {
     try {
@@ -375,14 +238,6 @@ export default {
     getvenues,
     updatevenues,
     deletevenue,
-
-    //venue stages
-    addvenuestages,
-    deletevenuestages,
-
-    //venue seats
-    addvenueseats,
-    deletevenueseats,
 
     //stages
     addstages,

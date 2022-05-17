@@ -48,19 +48,21 @@ const gettickets = (req: Request, res: Response) => {
         params.remove_areas ? removeQuery['areas'] = 0 : null;
         params.remove_rows ? removeQuery['areas.rows'] = 0 : null;
 
-        tickets.find(query, removeQuery)
-            .populate('concert')
-            .populate('venue')
-            .then(
-                (doc: any) => {
-                    if (doc) {
-                        success(req, res, "Ticket Details!", doc);
-                    } else {
-                        error(req, res, "Ticket Doesn't Exists!", "");
-                    }
-                }, err => {
-                    error(req, res, '', err)
-                })
+        let ticketsWithDynamicPopulate = tickets.find(query, removeQuery);
+
+        params.populate_concert ? ticketsWithDynamicPopulate.populate('concert') : null;
+        params.populate_venue ? ticketsWithDynamicPopulate.populate('venue') : null;
+
+        ticketsWithDynamicPopulate.then(
+            (doc: any) => {
+                if (doc) {
+                    success(req, res, "Ticket Details!", doc);
+                } else {
+                    error(req, res, "Ticket Doesn't Exists!", "");
+                }
+            }, err => {
+                error(req, res, '', err)
+            })
     } catch (err) {
         error(req, res, '', err)
     }
@@ -256,25 +258,12 @@ const getticket_with_parking_details = (req: Request, res: Response) => {
     try {
         let params = req.body;
 
-        parking_tickets.aggregate([
-            { $match: { ticket_id: params.ticket_id } },
-            {
-                $lookup: {
-                    from: "parkings",
-                    let: { parking_id: { $toObjectId: "$parking_id" } },
-                    pipeline: [
-                        { $match: { $expr: { $eq: ["$_id", "$$parking_id"] } } },
-                    ],
-                    as: "parking_details"
-                },
-            },
-            {
-                $addFields: { selected_tickets: 0 }
-            },
-            {
-                $unwind: '$parking_details'
-            }
-        ]).then(
+        let parking_tickets_with_dynamic_populate = parking_tickets.find({ ticket: new ObjectId(`${params.ticket}`) });
+
+        params.populate_ticket ? parking_tickets_with_dynamic_populate.populate('ticket') : null;
+        params.populate_parking ? parking_tickets_with_dynamic_populate.populate('parking') : null;
+
+        parking_tickets_with_dynamic_populate.then(
             (doc: any) => {
                 if (doc) {
                     success(req, res, "Parking details!", doc);
