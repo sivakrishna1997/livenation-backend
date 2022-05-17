@@ -29,7 +29,6 @@ const getparking = (req: Request, res: Response) => {
         let params = req.body;
         var query: any = {};
         params._id ? query['_id'] = new ObjectId(`${params._id}`) : null;
-        console.log("query", query);
         parking.find(query).then(
             (doc: any) => {
                 if (doc) {
