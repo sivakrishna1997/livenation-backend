@@ -4,11 +4,10 @@ import { success, error } from '../../../service/response.service';
 import { ObjectId } from 'mongodb';
 
 
-
 const addpackage = async (req: Request, res: Response) => {
     try {
         let params = req.body;
-        packages.findOne({ title: params.title, ticket_id: params.ticket_id }).then(
+        packages.findOne({ title: params.title, ticket: new ObjectId(`${params.ticket}`) }).then(
             async (udoc) => {
                 if (udoc) {
                     error(req, res, 'Package Title already exist!', null)
