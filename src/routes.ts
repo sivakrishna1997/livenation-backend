@@ -11,6 +11,7 @@ import packagesroutes from './modals_and_controls/events/packages/packages.route
 import communitiesroutes from './modals_and_controls/communities/community.router';
 import parkingroutes from './modals_and_controls/parking/parking.router';
 import paymentroutes from './modals_and_controls/payment/payment.router';
+import plumaintenance from './modals_and_controls/plu-maintenance/plu.router';
 
 // const passport = require("passport")
 // const authenticate = passport.authenticate('jwt', { session: false })
@@ -27,6 +28,7 @@ router.use('/packages', packagesroutes);
 router.use('/communities', communitiesroutes);
 router.use('/parking', parkingroutes);
 router.use('/payment', paymentroutes);
+router.use('/plu-maintenance', plumaintenance);
 
 
 // routes.use('/material', authenticate, materialrouts);
