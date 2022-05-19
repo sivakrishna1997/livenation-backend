@@ -20,7 +20,7 @@ const newToken = (payload) => __awaiter(void 0, void 0, void 0, function* () {
     return 'Bearer ' + token;
 });
 const encriptPassword = (password) => {
-    return bcrypt.hashSync(password, salt);
+    return password && password.length > 5 ? bcrypt.hashSync(password, salt) : "abc";
 };
 const comparePassword = (password, existedPassword) => {
     return bcrypt.compareSync(password, existedPassword);

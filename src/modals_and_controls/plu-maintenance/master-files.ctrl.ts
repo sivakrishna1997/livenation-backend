@@ -2,6 +2,7 @@ import { plu_master } from './plu.schema';
 import { Request, Response } from "express";
 import { success, error } from '../../service/response.service';
 import { ObjectId } from 'mongodb';
+import { pluMasterErrs } from '../../service/error-handler.service';
 
 
 // =================== Master start ====================== //
@@ -14,7 +15,7 @@ const add_master_file = async (req: Request, res: Response) => {
             (doc: any) => {
                 success(req, res, 'PLU master file added successfully!', doc);
             }, (err: any) => {
-                error(req, res, 'PLU master file adding failed!', err);
+                error(req, res, pluMasterErrs(err), null);
             }
         )
     } catch (err) {
@@ -48,9 +49,19 @@ const get_master_files = (req: Request, res: Response) => {
         params.populate_size ? getMastersWithPopulate.populate('size') : null;
         params.populate_color ? getMastersWithPopulate.populate('color') : null;
         params.populate_brand ? getMastersWithPopulate.populate('brand') : null;
-        params.populate_category ? getMastersWithPopulate.populate('category') : null;
+        params.populate_category ? getMastersWithPopulate.populate({
+            path: 'category',
+            populate: {
+                path: 'sub_categories'
+            },
+        }) : null;
         params.populate_sub_category ? getMastersWithPopulate.populate('sub_category') : null;
-        params.populate_department ? getMastersWithPopulate.populate('department') : null;
+        params.populate_department ? getMastersWithPopulate.populate({
+            path: 'department',
+            populate: {
+                path: 'sub_departments'
+            },
+        }) : null;
         params.populate_sub_department ? getMastersWithPopulate.populate('sub_department') : null;
 
         getMastersWithPopulate.then((doc: any) => {
@@ -145,7 +156,6 @@ export default {
     add_master_file,
     get_master_files,
     update_master_file,
-    delete_master_file,
-
+    delete_master_file
 };
 

@@ -1,11 +1,7 @@
 "use strict";
 var __createBinding = (this && this.__createBinding) || (Object.create ? (function(o, m, k, k2) {
     if (k2 === undefined) k2 = k;
-    var desc = Object.getOwnPropertyDescriptor(m, k);
-    if (!desc || ("get" in desc ? !m.__esModule : desc.writable || desc.configurable)) {
-      desc = { enumerable: true, get: function() { return m[k]; } };
-    }
-    Object.defineProperty(o, k2, desc);
+    Object.defineProperty(o, k2, { enumerable: true, get: function() { return m[k]; } });
 }) : (function(o, m, k, k2) {
     if (k2 === undefined) k2 = k;
     o[k2] = m[k];
@@ -38,6 +34,7 @@ const packages_router_1 = __importDefault(require("./modals_and_controls/events/
 const community_router_1 = __importDefault(require("./modals_and_controls/communities/community.router"));
 const parking_router_1 = __importDefault(require("./modals_and_controls/parking/parking.router"));
 const payment_router_1 = __importDefault(require("./modals_and_controls/payment/payment.router"));
+const plu_router_1 = __importDefault(require("./modals_and_controls/plu-maintenance/plu.router"));
 // const passport = require("passport")
 // const authenticate = passport.authenticate('jwt', { session: false })
 router.use('/user', user_router_1.default);
@@ -52,6 +49,7 @@ router.use('/packages', packages_router_1.default);
 router.use('/communities', community_router_1.default);
 router.use('/parking', parking_router_1.default);
 router.use('/payment', payment_router_1.default);
+router.use('/plu-maintenance', plu_router_1.default);
 // routes.use('/material', authenticate, materialrouts);
 exports.default = router;
 //# sourceMappingURL=routes.js.map

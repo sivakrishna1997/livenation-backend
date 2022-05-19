@@ -1,11 +1,7 @@
 "use strict";
 var __createBinding = (this && this.__createBinding) || (Object.create ? (function(o, m, k, k2) {
     if (k2 === undefined) k2 = k;
-    var desc = Object.getOwnPropertyDescriptor(m, k);
-    if (!desc || ("get" in desc ? !m.__esModule : desc.writable || desc.configurable)) {
-      desc = { enumerable: true, get: function() { return m[k]; } };
-    }
-    Object.defineProperty(o, k2, desc);
+    Object.defineProperty(o, k2, { enumerable: true, get: function() { return m[k]; } });
 }) : (function(o, m, k, k2) {
     if (k2 === undefined) k2 = k;
     o[k2] = m[k];
@@ -50,11 +46,9 @@ const cloudinaryImageUploadMethod = (file) => __awaiter(void 0, void 0, void 0, 
         }
         cloud.uploader.upload(file.tempFilePath, query, (err, res) => {
             if (err) {
-                console.log("file image upload err:::::::", err);
                 reject(null);
             }
             else {
-                console.log("file image upload res:::::::", res);
                 let response = {};
                 res.secure_url ? response['url'] = res.secure_url : "";
                 res.public_id ? response['publicid'] = res.public_id : "";
@@ -80,7 +74,6 @@ const uploadimages = (req, res, next) => __awaiter(void 0, void 0, void 0, funct
     try {
         let images = [];
         const files = req.files.images;
-        console.log("files multiple", files);
         if (Array.isArray(files)) {
             for (const file of files) {
                 let response = yield cloudinaryImageUploadMethod(file);
@@ -96,7 +89,6 @@ const uploadimages = (req, res, next) => __awaiter(void 0, void 0, void 0, funct
                 images.push({ url: response.url, publicid: response.publicid, name: files.name.split(".")[0], filetype: files.mimetype });
         }
         req.body.images = images;
-        console.log("req.body.images ", req.body.images);
         next();
     }
     catch (err) {
@@ -132,11 +124,9 @@ const cloudinaryImageDeleteMethod = (imageid) => __awaiter(void 0, void 0, void 
     return new Promise((resolve, reject) => {
         cloud.uploader.destroy(imageid, { invalidate: true, resource_type: "image" }, (err, res) => {
             if (err) {
-                console.log('error : ', err);
                 reject(null);
             }
             else {
-                console.log('response : ', res);
                 resolve(res);
             }
         });
@@ -145,7 +135,6 @@ const cloudinaryImageDeleteMethod = (imageid) => __awaiter(void 0, void 0, void 
 const deleteimage = (req, res, next) => __awaiter(void 0, void 0, void 0, function* () {
     try {
         var id = req.body.carousalCloudId;
-        console.log('id : ', id);
         const url = yield cloudinaryImageDeleteMethod(id);
         if (url) {
             req.body.image = { res };
@@ -158,7 +147,6 @@ const deleteimage = (req, res, next) => __awaiter(void 0, void 0, void 0, functi
 });
 const uploadandgeturl = (req, res, next) => __awaiter(void 0, void 0, void 0, function* () {
     try {
-        console.log(" req.files:: ", req.files);
         var file = req.files.image;
         let response = yield cloudinaryImageUploadMethod(file);
         if (response) {

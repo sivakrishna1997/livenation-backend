@@ -5,47 +5,77 @@ import { ObjectId } from 'mongodb';
 import { userformatter } from './userformatter';
 import commonService from '../../service/common.service';
 import { Request, Response } from "express";
+import { userErrs } from '../../service/error-handler.service';
 
 
+
+const sendUserWithToken = async (req: Request, res: Response, doc: any, message: string) => {
+    let payload = {
+        email: doc.email,
+        id: doc._id,
+    };
+    let responseObj = {
+        token: await commonService.newToken(payload),
+        user: userformatter(doc)
+    }
+    success(req, res, message, responseObj);
+}
 
 
 const adduser = async (req: Request, res: Response) => {
     try {
         let params = req.body;
-        user.findOne({ email: params.email }).then(
-            (edoc) => {
-                if (edoc) {
-                    error(req, res, 'Email already exist!', null);
-                } else {
-                    user.findOne({ username: params.username }).then(
-                        async (udoc) => {
-                            if (udoc) {
-                                error(req, res, 'Username already exist!', null)
-                            } else {
-                                params['cdate'] = Date.now();
-                                params['udate'] = Date.now();
-                                params['password'] = await commonService.encriptPassword(req.body.password);
-                                var inputdata = new user(params)
-                                inputdata.save().then(
-                                    (doc: any) => {
-                                        success(req, res, 'Registered Successfully!', userformatter(doc));
-                                    }, (err: any) => {
-                                        error(req, res, 'Registration Failed!', err);
-                                    }
-                                )
-                            }
-                        }, err => {
-                            error(req, res, 'Registration Failed!', err)
-                        }
-                    )
-                }
-            }, err => {
-                error(req, res, 'Registration Failed!', err)
+        params['cdate'] = Date.now();
+        params['udate'] = Date.now();
+        params['password'] = await commonService.encriptPassword(req.body.password);
+        var inputdata = new user(params)
+        inputdata.save().then(
+            (doc: any) => {
+                success(req, res, 'Registered successfully!', userformatter(doc));
+            }, async (err: any) => {
+                let err_msg = await userErrs(err);
+                error(req, res, err_msg, null);
             }
         )
     } catch (err) {
-        error(req, res, 'Registration Failed!', err)
+        error(req, res, '', err)
     }
+    // try {
+    //     let params = req.body;
+    //     user.findOne({ email: params.email }).then(
+    //         (edoc) => {
+    //             if (edoc) {
+    //                 error(req, res, 'Email already exist!', null);
+    //             } else {
+    //                 user.findOne({ username: params.username }).then(
+    //                     async (udoc) => {
+    //                         if (udoc) {
+    //                             error(req, res, 'Username already exist!', null)
+    //                         } else {
+    //                             params['cdate'] = Date.now();
+    //                             params['udate'] = Date.now();
+    //                             params['password'] = await commonService.encriptPassword(req.body.password);
+    //                             var inputdata = new user(params)
+    //                             inputdata.save().then(
+    //                                 (doc: any) => {
+    //                                     success(req, res, 'Registered Successfully!', userformatter(doc));
+    //                                 }, (err: any) => {
+    //                                     error(req, res, 'Registration Failed!', err);
+    //                                 }
+    //                             )
+    //                         }
+    //                     }, err => {
+    //                         error(req, res, 'Registration Failed!', err)
+    //                     }
+    //                 )
+    //             }
+    //         }, err => {
+    //             error(req, res, 'Registration Failed!', err)
+    //         }
+    //     )
+    // } catch (err) {
+    //     error(req, res, 'Registration Failed!', err)
+    // }
 }
 
 const checkUserAndSave = async (req: Request, res: Response) => {
@@ -58,9 +88,7 @@ const checkUserAndSave = async (req: Request, res: Response) => {
                 } else {
                     params['cdate'] = Date.now();
                     params['udate'] = Date.now();
-                    if (req.body.password) {
-                        params['password'] = await commonService.encriptPassword(req.body.password);
-                    }
+                    params['password'] = await commonService.encriptPassword(req.body.password);
                     var inputdata = new user(params)
                     inputdata.save().then(
                         (doc: any) => {
@@ -109,17 +137,6 @@ const userlogin = async (req: Request, res: Response) => {
     }
 }
 
-const sendUserWithToken = async (req: Request, res: Response, doc: any, message: string) => {
-    let payload = {
-        email: doc.email,
-        id: doc._id,
-    };
-    let responseObj = {
-        token: await commonService.newToken(payload),
-        user: userformatter(doc)
-    }
-    success(req, res, message, responseObj);
-}
 
 
 const getuser = (req: Request, res: Response) => {

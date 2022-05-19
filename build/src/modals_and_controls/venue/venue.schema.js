@@ -1,11 +1,7 @@
 "use strict";
 var __createBinding = (this && this.__createBinding) || (Object.create ? (function(o, m, k, k2) {
     if (k2 === undefined) k2 = k;
-    var desc = Object.getOwnPropertyDescriptor(m, k);
-    if (!desc || ("get" in desc ? !m.__esModule : desc.writable || desc.configurable)) {
-      desc = { enumerable: true, get: function() { return m[k]; } };
-    }
-    Object.defineProperty(o, k2, desc);
+    Object.defineProperty(o, k2, { enumerable: true, get: function() { return m[k]; } });
 }) : (function(o, m, k, k2) {
     if (k2 === undefined) k2 = k;
     o[k2] = m[k];
@@ -26,16 +22,11 @@ Object.defineProperty(exports, "__esModule", { value: true });
 exports.stages = exports.venues = void 0;
 const mongoose = __importStar(require("mongoose"));
 exports.venues = mongoose.model('venues', new mongoose.Schema({
-    name: { type: String, required: true, trim: true, index: true },
+    name: { type: String, required: [true, "Venue Name is required"], trim: true, index: true, unique: true },
     location: { type: String, index: true },
     capacity: { type: String },
     stage_layout: { type: String },
-    stages: [
-        {
-            stage_id: { type: String },
-            stage_name: { type: String }
-        }
-    ],
+    stages: [{ type: mongoose.Schema.Types.ObjectId, ref: "stages" }],
     seats: [
         {
             name: { type: String, trim: true },
@@ -46,7 +37,7 @@ exports.venues = mongoose.model('venues', new mongoose.Schema({
     udate: { type: Date }
 }));
 exports.stages = mongoose.model('stages', new mongoose.Schema({
-    name: { type: String, required: true, trim: true },
+    name: { type: String, required: [true, "Stage Name is required"], trim: true },
     cdate: { type: Date },
     udate: { type: Date }
 }));

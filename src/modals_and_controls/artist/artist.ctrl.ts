@@ -2,31 +2,22 @@ import { artist } from './artist.schema';
 import { Request, Response } from "express";
 import { success, error } from '../../service/response.service';
 import { ObjectId } from 'mongodb';
+import { artistErrs } from '../../service/error-handler.service';
 
 
 
 const addartist = async (req: Request, res: Response) => {
     try {
         let params = req.body;
-        artist.findOne({ name: params.name }).then(
-            async (udoc) => {
-                if (udoc) {
-                    error(req, res, 'Artist already exist!', null)
-                } else {
-                    params['cdate'] = Date.now();
-                    params['udate'] = Date.now();
+        params['cdate'] = Date.now();
+        params['udate'] = Date.now();
 
-                    var inputdata = new artist(params)
-                    inputdata.save().then(
-                        (doc: any) => {
-                            success(req, res, 'Artist added successfully!', doc);
-                        }, (err: any) => {
-                            error(req, res, 'Artist adding failed!', err);
-                        }
-                    )
-                }
-            }, err => {
-                error(req, res, '', err)
+        var inputdata = new artist(params)
+        inputdata.save().then(
+            (doc: any) => {
+                success(req, res, 'Artist added successfully!', doc);
+            }, (err: any) => {
+                error(req, res, artistErrs(err), null);
             }
         )
     } catch (err) {
@@ -75,27 +66,29 @@ const getartist_with_eventcount = (req: Request, res: Response) => {
                 $lookup: {
                     from: "events",
                     let: { artist_id: "$_id" },
-                    pipeline: [
-                        {
-                            $match: {
-                                performers: {
-                                    $elemMatch: {
-                                        artist_id: "$$artist_id",
-                                    },
-                                },
-                            },
+                    pipeline: [{
+                        $match: {
+                            $expr: {
+                                $or: [
+                                    { $in: ["$$artist_id", "$performers"] },
+                                    { $eq: ["$$artist_id", "$main_artist"] },
+                                ]
+                            }
                         }
-                    ],
-                    // pipeline: [{
-                    //     $match: {
-                    //         $expr: { $in: ["$$artist_id", "$performers.artist_id"] }
-                    //     }
-                    // }],
-                    as: "matches"
+                    }],
+                    as: "paeticipated_events"
                 }
-
             },
-
+            {
+                "$addFields": {
+                    "participated_events_count": { $size: "$paeticipated_events" }
+                }
+            },
+            {
+                $project: {
+                    paeticipated_events: 0
+                }
+            }
         ]).then(
             (doc: any) => {
                 if (doc) {
@@ -106,52 +99,6 @@ const getartist_with_eventcount = (req: Request, res: Response) => {
             }, err => {
                 error(req, res, '', err)
             })
-
-        // artist.aggregate([
-        //     {
-        //         $lookup: {
-        //             from: "events",
-        //             let: { artist_id: '$_id' },
-        //             pipeline: [
-        //                 // {
-        //                 //     $match: {
-        //                 //         performers: {
-        //                 //             $elemMatch: {
-        //                 //                 artist_name: "$$artist_name",
-        //                 //             },
-        //                 //         },
-        //                 //     }
-        //                 // },
-        //                 {
-        //                     $match: {
-        //                         $in: [{
-        //                             artist_id: '$$artist_id'
-        //                         }, "$performers"] // actual array value is [{ b: 123, a: "ABC" }, { a: 234, b: "BCD" }]
-        //                     }
-        //                 },
-
-        //                 // {
-        //                 //     $match: {
-        //                 //         $expr: { $eq: ["$$artist_id", "$performers.artist_id"] }
-        //                 //     }
-        //                 // },
-        //                 { $project: { _id: 0 } }
-        //             ],
-        //             as: "artist_with_events"
-        //         }
-        //     }
-        // ]).then(
-        //     (doc: any) => {
-        //         if (doc) {
-        //             success(req, res, "Artist details!", doc);
-        //         } else {
-        //             error(req, res, "Artist doesn't exists!", "");
-        //         }
-        //     }, err => {
-        //         error(req, res, '', err)
-        //     })
-
-
     } catch (err) {
         error(req, res, '', err)
     }

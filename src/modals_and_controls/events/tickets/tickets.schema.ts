@@ -2,11 +2,10 @@ import * as mongoose from 'mongoose';
 
 export const tickets = mongoose.model('tickets', new mongoose.Schema({
 
-    concert: { type: mongoose.Schema.Types.ObjectId, ref: "events", required: true },
-    venue: { type: mongoose.Schema.Types.ObjectId, ref: "venues", required: true },
-
-    stage_setup: { type: String, trim: true },
-    event_date: { type: Date, required: true },
+    concert: { type: mongoose.Schema.Types.ObjectId, ref: "events", required: [true, "Concert is required"] },
+    venue: { type: mongoose.Schema.Types.ObjectId, ref: "venues", required: [true, "Venue is required"] },
+    stage_setup: { type: String, trim: true, required: [true, "Stage Set Up is required"] },
+    event_date: { type: Date, required: [true, "Event Date is required"] },
     start_time: { type: String, trim: true },
     end_time: { type: String, trim: true },
 
@@ -33,7 +32,7 @@ export const tickets = mongoose.model('tickets', new mongoose.Schema({
 
 export const parking_tickets = mongoose.model('parkingtickets', new mongoose.Schema({
 
-    ticket: { type: mongoose.Schema.Types.ObjectId, ref: "tickets", required: true },
+    ticket: { type: mongoose.Schema.Types.ObjectId, ref: "tickets", required: [true, "Ticket is required"] },
     parking: { type: mongoose.Schema.Types.ObjectId, ref: "parkings" },
 
     price: { type: String },

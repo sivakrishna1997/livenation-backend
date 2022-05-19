@@ -12,25 +12,17 @@ Object.defineProperty(exports, "__esModule", { value: true });
 const artist_schema_1 = require("./artist.schema");
 const response_service_1 = require("../../service/response.service");
 const mongodb_1 = require("mongodb");
+const error_handler_service_1 = require("src/service/error-handler.service");
 const addartist = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
     try {
         let params = req.body;
-        artist_schema_1.artist.findOne({ name: params.name }).then((udoc) => __awaiter(void 0, void 0, void 0, function* () {
-            if (udoc) {
-                (0, response_service_1.error)(req, res, 'Artist already exist!', null);
-            }
-            else {
-                params['cdate'] = Date.now();
-                params['udate'] = Date.now();
-                var inputdata = new artist_schema_1.artist(params);
-                inputdata.save().then((doc) => {
-                    (0, response_service_1.success)(req, res, 'Artist added successfully!', doc);
-                }, (err) => {
-                    (0, response_service_1.error)(req, res, 'Artist adding failed!', err);
-                });
-            }
-        }), err => {
-            (0, response_service_1.error)(req, res, '', err);
+        params['cdate'] = Date.now();
+        params['udate'] = Date.now();
+        var inputdata = new artist_schema_1.artist(params);
+        inputdata.save().then((doc) => {
+            (0, response_service_1.success)(req, res, 'Artist added successfully!', doc);
+        }, (err) => {
+            (0, response_service_1.error)(req, res, (0, error_handler_service_1.artistErrs)(err), null);
         });
     }
     catch (err) {

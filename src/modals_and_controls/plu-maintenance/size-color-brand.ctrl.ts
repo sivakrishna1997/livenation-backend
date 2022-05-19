@@ -2,6 +2,7 @@ import { plu_sizes, plu_colors, plu_brands } from './plu.schema';
 import { Request, Response } from "express";
 import { success, error } from '../../service/response.service';
 import { ObjectId } from 'mongodb';
+import { pluBrandErrs, pluColorErrs, pluSizeErrs } from '../../service/error-handler.service';
 
 
 // =================== sizes start ====================== //
@@ -9,22 +10,13 @@ import { ObjectId } from 'mongodb';
 const add_size = async (req: Request, res: Response) => {
     try {
         let params = req.body;
-        plu_sizes.findOne({ name: params.name }).then(
-            async (udoc) => {
-                if (udoc) {
-                    error(req, res, 'Size Name already exist!', null)
-                } else {
-                    var inputdata = new plu_sizes(params)
-                    inputdata.save().then(
-                        (doc: any) => {
-                            success(req, res, 'Size Name added successfully!', doc);
-                        }, (err: any) => {
-                            error(req, res, 'Size Name adding failed!', err);
-                        }
-                    )
-                }
-            }, err => {
-                error(req, res, '', err)
+
+        var inputdata = new plu_sizes(params)
+        inputdata.save().then(
+            (doc: any) => {
+                success(req, res, 'Size Name added successfully!', doc);
+            }, (err: any) => {
+                error(req, res, pluSizeErrs(err), null);
             }
         )
     } catch (err) {
@@ -110,22 +102,12 @@ const delete_size = (req: Request, res: Response) => {
 const add_color = async (req: Request, res: Response) => {
     try {
         let params = req.body;
-        plu_colors.findOne({ name: params.name }).then(
-            async (udoc) => {
-                if (udoc) {
-                    error(req, res, 'Color Name already exist!', null)
-                } else {
-                    var inputdata = new plu_colors(params)
-                    inputdata.save().then(
-                        (doc: any) => {
-                            success(req, res, 'Color Name added successfully!', doc);
-                        }, (err: any) => {
-                            error(req, res, 'Color Name adding failed!', err);
-                        }
-                    )
-                }
-            }, err => {
-                error(req, res, '', err)
+        var inputdata = new plu_colors(params)
+        inputdata.save().then(
+            (doc: any) => {
+                success(req, res, 'Color Name added successfully!', doc);
+            }, (err: any) => {
+                error(req, res, pluColorErrs(err), null);
             }
         )
     } catch (err) {
@@ -212,22 +194,13 @@ const delete_color = (req: Request, res: Response) => {
 const add_brand = async (req: Request, res: Response) => {
     try {
         let params = req.body;
-        plu_brands.findOne({ name: params.name }).then(
-            async (udoc) => {
-                if (udoc) {
-                    error(req, res, 'Brand Name already exist!', null)
-                } else {
-                    var inputdata = new plu_brands(params)
-                    inputdata.save().then(
-                        (doc: any) => {
-                            success(req, res, 'Brand Name added successfully!', doc);
-                        }, (err: any) => {
-                            error(req, res, 'Brand Name adding failed!', err);
-                        }
-                    )
-                }
-            }, err => {
-                error(req, res, '', err)
+
+        var inputdata = new plu_brands(params)
+        inputdata.save().then(
+            (doc: any) => {
+                success(req, res, 'Brand Name added successfully!', doc);
+            }, (err: any) => {
+                error(req, res, pluBrandErrs(err), null);
             }
         )
     } catch (err) {

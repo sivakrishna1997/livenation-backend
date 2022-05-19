@@ -81,7 +81,7 @@ const getevents = (req: Request, res: Response) => {
 
         let eventsWithDynamicPopulate = events.find(query);
 
-        params.populate_venues ? eventsWithDynamicPopulate.populate('venues') : null;
+        params.populate_venues ? eventsWithDynamicPopulate.populate({ path: 'venues', populate: { path: 'stages' } }) : null;
         params.populate_main_artist ? eventsWithDynamicPopulate.populate('main_artist') : null;
         params.populate_performers ? eventsWithDynamicPopulate.populate('performers') : null;
         params.populate_genre ? eventsWithDynamicPopulate.populate('genre') : null;

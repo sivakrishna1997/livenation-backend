@@ -1,11 +1,7 @@
 "use strict";
 var __createBinding = (this && this.__createBinding) || (Object.create ? (function(o, m, k, k2) {
     if (k2 === undefined) k2 = k;
-    var desc = Object.getOwnPropertyDescriptor(m, k);
-    if (!desc || ("get" in desc ? !m.__esModule : desc.writable || desc.configurable)) {
-      desc = { enumerable: true, get: function() { return m[k]; } };
-    }
-    Object.defineProperty(o, k2, desc);
+    Object.defineProperty(o, k2, { enumerable: true, get: function() { return m[k]; } });
 }) : (function(o, m, k, k2) {
     if (k2 === undefined) k2 = k;
     o[k2] = m[k];
@@ -26,7 +22,7 @@ Object.defineProperty(exports, "__esModule", { value: true });
 exports.communities = void 0;
 const mongoose = __importStar(require("mongoose"));
 exports.communities = mongoose.model('communities', new mongoose.Schema({
-    community_name: { type: String, required: true, trim: true, index: true },
+    name: { type: String, required: [true, "Community Name is required"], trim: true, index: true, unique: true },
     cdate: { type: Date },
     udate: { type: Date }
 }));

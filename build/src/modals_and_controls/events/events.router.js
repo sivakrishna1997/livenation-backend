@@ -1,11 +1,7 @@
 "use strict";
 var __createBinding = (this && this.__createBinding) || (Object.create ? (function(o, m, k, k2) {
     if (k2 === undefined) k2 = k;
-    var desc = Object.getOwnPropertyDescriptor(m, k);
-    if (!desc || ("get" in desc ? !m.__esModule : desc.writable || desc.configurable)) {
-      desc = { enumerable: true, get: function() { return m[k]; } };
-    }
-    Object.defineProperty(o, k2, desc);
+    Object.defineProperty(o, k2, { enumerable: true, get: function() { return m[k]; } });
 }) : (function(o, m, k, k2) {
     if (k2 === undefined) k2 = k;
     o[k2] = m[k];
@@ -31,6 +27,7 @@ const root = express.Router();
 const events_ctrl_1 = __importDefault(require("./events.ctrl"));
 root.post('/add', events_ctrl_1.default.addevent);
 root.post('/get', events_ctrl_1.default.getevents);
+root.post('/geteventbyid', events_ctrl_1.default.geteventbyid);
 root.post('/update', events_ctrl_1.default.updateevent);
 root.post('/delete', events_ctrl_1.default.deleteevent);
 root.post('/geteventsforyou', events_ctrl_1.default.geteventsforyou);
