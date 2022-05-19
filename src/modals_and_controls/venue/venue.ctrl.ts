@@ -2,6 +2,7 @@ import { venues, stages } from './venue.schema';
 import { Request, Response } from "express";
 import { success, error } from '../../service/response.service';
 import { ObjectId } from 'mongodb';
+import { stageErrs, venueErrs } from '../../service/error-handler.service';
 
 
 // =================== venue ====================== //
@@ -9,25 +10,16 @@ import { ObjectId } from 'mongodb';
 const addvenue = async (req: Request, res: Response) => {
     try {
         let params = req.body;
-        venues.findOne({ name: params.name }).then(
-            async (udoc) => {
-                if (udoc) {
-                    error(req, res, 'Venue already exist!', null)
-                } else {
-                    params['cdate'] = Date.now();
-                    params['udate'] = Date.now();
 
-                    var inputdata = new venues(params)
-                    inputdata.save().then(
-                        (doc: any) => {
-                            success(req, res, 'Venue added successfully!', doc);
-                        }, (err: any) => {
-                            error(req, res, 'Venue adding failed!', err);
-                        }
-                    )
-                }
-            }, err => {
-                error(req, res, '', err)
+        params['cdate'] = Date.now();
+        params['udate'] = Date.now();
+
+        var inputdata = new venues(params)
+        inputdata.save().then(
+            (doc: any) => {
+                success(req, res, 'Venue added successfully!', doc);
+            }, (err: any) => {
+                error(req, res, venueErrs(err), null);
             }
         )
     } catch (err) {
@@ -125,25 +117,16 @@ const deletevenue = (req: Request, res: Response) => {
 const addstages = async (req: Request, res: Response) => {
     try {
         let params = req.body;
-        stages.findOne({ name: params.name }).then(
-            async (udoc) => {
-                if (udoc) {
-                    error(req, res, 'Stage already exist!', null)
-                } else {
-                    params['cdate'] = Date.now();
-                    params['udate'] = Date.now();
 
-                    var inputdata = new stages(params)
-                    inputdata.save().then(
-                        (doc: any) => {
-                            success(req, res, 'Stage added successfully!', doc);
-                        }, (err: any) => {
-                            error(req, res, 'Stage adding failed!', err);
-                        }
-                    )
-                }
-            }, err => {
-                error(req, res, '', err)
+        params['cdate'] = Date.now();
+        params['udate'] = Date.now();
+
+        var inputdata = new stages(params)
+        inputdata.save().then(
+            (doc: any) => {
+                success(req, res, 'Stage added successfully!', doc);
+            }, (err: any) => {
+                error(req, res, stageErrs(err), null);
             }
         )
     } catch (err) {

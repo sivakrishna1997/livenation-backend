@@ -15,7 +15,7 @@ const mongodb_1 = require("mongodb");
 const addpackage = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
     try {
         let params = req.body;
-        packages_schema_1.packages.findOne({ title: params.title, ticket_id: params.ticket_id }).then((udoc) => __awaiter(void 0, void 0, void 0, function* () {
+        packages_schema_1.packages.findOne({ title: params.title, ticket: new mongodb_1.ObjectId(`${params.ticket}`) }).then((udoc) => __awaiter(void 0, void 0, void 0, function* () {
             if (udoc) {
                 (0, response_service_1.error)(req, res, 'Package Title already exist!', null);
             }
@@ -41,7 +41,7 @@ const getpackages = (req, res) => {
         var query = {};
         params.title ? query['title'] = params.title : null;
         params._id ? query['_id'] = new mongodb_1.ObjectId(`${params._id}`) : null;
-        params.ticket_id ? query['ticket_id'] = params.ticket_id : null;
+        params.ticket ? query['ticket'] = new mongodb_1.ObjectId(`${params.ticket}`) : null;
         packages_schema_1.packages.aggregate([
             { $match: query },
             { $addFields: { selected_packages: 0 } }

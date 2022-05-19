@@ -34,19 +34,19 @@ const gettickets = (req, res) => {
         let params = req.body;
         var query = {};
         params._id ? query['_id'] = new mongodb_1.ObjectId(`${params._id}`) : null;
-        params.concert_id ? query['concert_id'] = params.concert_id : null;
-        params.concert_title ? query['concert_title'] = params.concert_title : null;
-        params.concert_venue_id ? query['concert_venue_id'] = params.concert_venue_id : null;
-        params.concert_venue_name ? query['concert_venue_name'] = params.concert_venue_name : null;
+        params.concert ? query['concert'] = new mongodb_1.ObjectId(`${params.concert}`) : null;
+        params.venue ? query['venue'] = new mongodb_1.ObjectId(`${params.venue}`) : null;
         params.event_date ? query['event_date'] = params.event_date : null;
         params.stage_setup ? query['stage_setup'] = params.stage_setup : null;
         params.between_dates ? query['event_date'] = { $gte: new Date(params.between_dates.start_date), $lt: new Date(params.between_dates.end_date) } : null;
         params.event_date_gt ? query['event_date'] = { $gte: new Date(params.event_date_gt) } : null;
-        // params.area_id ? query['areas'] = { $elemMatch: { _id: new ObjectId(`${params.area_id}`) } } : null;
         let removeQuery = {};
         params.remove_areas ? removeQuery['areas'] = 0 : null;
         params.remove_rows ? removeQuery['areas.rows'] = 0 : null;
-        tickets_schema_1.tickets.find(query, removeQuery).then((doc) => {
+        let ticketsWithDynamicPopulate = tickets_schema_1.tickets.find(query, removeQuery);
+        params.populate_concert ? ticketsWithDynamicPopulate.populate('concert') : null;
+        params.populate_venue ? ticketsWithDynamicPopulate.populate('venue') : null;
+        ticketsWithDynamicPopulate.then((doc) => {
             if (doc) {
                 (0, response_service_1.success)(req, res, "Ticket Details!", doc);
             }
@@ -66,8 +66,8 @@ const updatetickets = (req, res) => __awaiter(void 0, void 0, void 0, function* 
         let params = req.body;
         let basedOn = {};
         params._id ? basedOn['_id'] = new mongodb_1.ObjectId(`${params._id}`) : null;
-        params.concert_id ? basedOn['concert_id'] = params.concert_id : null;
-        params.concert_venue_id ? basedOn['concert_venue_id'] = params.concert_venue_id : null;
+        params.concert ? basedOn['concert'] = new mongodb_1.ObjectId(`${params.concert}`) : null;
+        params.venue ? basedOn['venue'] = new mongodb_1.ObjectId(`${params.venue}`) : null;
         params.stage_setup ? basedOn['stage_setup'] = params.stage_setup : null;
         params.area_id ? basedOn['areas'] = { $elemMatch: { _id: new mongodb_1.ObjectId(`${params.area_id}`) } } : null;
         let setQuery = {};
@@ -119,7 +119,7 @@ const deletetickets = (req, res) => {
 const addparking_tickets = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
     try {
         let params = req.body;
-        tickets_schema_1.parking_tickets.findOne({ ticket_id: params.ticket_id, parking_id: params.parking_id }).then((udoc) => __awaiter(void 0, void 0, void 0, function* () {
+        tickets_schema_1.parking_tickets.findOne({ ticket: new mongodb_1.ObjectId(`${params.ticket}`), parking: new mongodb_1.ObjectId(`${params.parking}`) }).then((udoc) => __awaiter(void 0, void 0, void 0, function* () {
             if (udoc) {
                 (0, response_service_1.error)(req, res, 'Parking already exist!', null);
             }
@@ -146,13 +146,14 @@ const getparking_tickets = (req, res) => {
         let params = req.body;
         var query = {};
         params._id ? query['_id'] = new mongodb_1.ObjectId(`${params._id}`) : null;
-        params.ticket_id ? query['ticket_id'] = params.ticket_id : null;
-        params.parking_id ? query['parking_id'] = params.parking_id : null;
-        params.parking_name ? query['parking_name'] = params.parking_name : null;
+        params.ticket ? query['ticket'] = new mongodb_1.ObjectId(`${params.ticket}`) : null;
+        params.parking ? query['parking'] = new mongodb_1.ObjectId(`${params.parking}`) : null;
         params.parking_type ? query['parking_type'] = params.parking_type : null;
         let removeQuery = {};
         params.remove_parking_seats ? removeQuery['parking_seats'] = 0 : null;
-        tickets_schema_1.parking_tickets.find(query, removeQuery).then((doc) => {
+        tickets_schema_1.parking_tickets.find(query, removeQuery)
+            .populate('parking')
+            .then((doc) => {
             if (doc) {
                 (0, response_service_1.success)(req, res, "Parking Details!", doc);
             }
@@ -176,8 +177,7 @@ const updateparking_tickets = (req, res) => __awaiter(void 0, void 0, void 0, fu
         params.price ? setQuery['price'] = params.price : null;
         params.price_type ? setQuery['price_type'] = params.price_type : null;
         params.distance ? setQuery['distance'] = params.distance : null;
-        params.parking_id ? setQuery['parking_id'] = params.parking_id : null;
-        params.parking_name ? setQuery['parking_name'] = params.parking_name : null;
+        params.parking ? setQuery['parking'] = new mongodb_1.ObjectId(`${params.parking}`) : null;
         params.parking_type ? setQuery['parking_type'] = params.parking_type : null;
         params.parking_seats ? setQuery['parking_seats'] = params.parking_seats : null;
         tickets_schema_1.parking_tickets.findOneAndUpdate(basedOn, { $set: setQuery }).then((udoc) => {
@@ -219,25 +219,10 @@ const deleteparking_tickets = (req, res) => {
 const getticket_with_parking_details = (req, res) => {
     try {
         let params = req.body;
-        tickets_schema_1.parking_tickets.aggregate([
-            { $match: { ticket_id: params.ticket_id } },
-            {
-                $lookup: {
-                    from: "parkings",
-                    let: { parking_id: { $toObjectId: "$parking_id" } },
-                    pipeline: [
-                        { $match: { $expr: { $eq: ["$_id", "$$parking_id"] } } },
-                    ],
-                    as: "parking_details"
-                },
-            },
-            {
-                $addFields: { selected_tickets: 0 }
-            },
-            {
-                $unwind: '$parking_details'
-            }
-        ]).then((doc) => {
+        let parking_tickets_with_dynamic_populate = tickets_schema_1.parking_tickets.find({ ticket: new mongodb_1.ObjectId(`${params.ticket}`) });
+        params.populate_ticket ? parking_tickets_with_dynamic_populate.populate('ticket') : null;
+        params.populate_parking ? parking_tickets_with_dynamic_populate.populate('parking') : null;
+        parking_tickets_with_dynamic_populate.then((doc) => {
             if (doc) {
                 (0, response_service_1.success)(req, res, "Parking details!", doc);
             }

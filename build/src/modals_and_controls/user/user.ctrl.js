@@ -18,40 +18,71 @@ const response_service_1 = require("../../service/response.service");
 const mongodb_1 = require("mongodb");
 const userformatter_1 = require("./userformatter");
 const common_service_1 = __importDefault(require("../../service/common.service"));
+const error_handler_service_1 = require("src/service/error-handler.service");
+const sendUserWithToken = (req, res, doc, message) => __awaiter(void 0, void 0, void 0, function* () {
+    let payload = {
+        email: doc.email,
+        id: doc._id,
+    };
+    let responseObj = {
+        token: yield common_service_1.default.newToken(payload),
+        user: (0, userformatter_1.userformatter)(doc)
+    };
+    (0, response_service_1.success)(req, res, message, responseObj);
+});
 const adduser = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
     try {
         let params = req.body;
-        user_schema_1.user.findOne({ email: params.email }).then((edoc) => {
-            if (edoc) {
-                (0, response_service_1.error)(req, res, 'Email already exist!', null);
-            }
-            else {
-                user_schema_1.user.findOne({ username: params.username }).then((udoc) => __awaiter(void 0, void 0, void 0, function* () {
-                    if (udoc) {
-                        (0, response_service_1.error)(req, res, 'Username already exist!', null);
-                    }
-                    else {
-                        params['cdate'] = Date.now();
-                        params['udate'] = Date.now();
-                        params['password'] = yield common_service_1.default.encriptPassword(req.body.password);
-                        var inputdata = new user_schema_1.user(params);
-                        inputdata.save().then((doc) => {
-                            (0, response_service_1.success)(req, res, 'Registered Successfully!', (0, userformatter_1.userformatter)(doc));
-                        }, (err) => {
-                            (0, response_service_1.error)(req, res, 'Registration Failed!', err);
-                        });
-                    }
-                }), err => {
-                    (0, response_service_1.error)(req, res, 'Registration Failed!', err);
-                });
-            }
-        }, err => {
-            (0, response_service_1.error)(req, res, 'Registration Failed!', err);
-        });
+        params['cdate'] = Date.now();
+        params['udate'] = Date.now();
+        params['password'] = yield common_service_1.default.encriptPassword(req.body.password);
+        var inputdata = new user_schema_1.user(params);
+        inputdata.save().then((doc) => {
+            (0, response_service_1.success)(req, res, 'Registered successfully!', (0, userformatter_1.userformatter)(doc));
+        }, (err) => __awaiter(void 0, void 0, void 0, function* () {
+            let err_msg = yield (0, error_handler_service_1.userErrs)(err);
+            (0, response_service_1.error)(req, res, err_msg, null);
+        }));
     }
     catch (err) {
-        (0, response_service_1.error)(req, res, 'Registration Failed!', err);
+        (0, response_service_1.error)(req, res, '', err);
     }
+    // try {
+    //     let params = req.body;
+    //     user.findOne({ email: params.email }).then(
+    //         (edoc) => {
+    //             if (edoc) {
+    //                 error(req, res, 'Email already exist!', null);
+    //             } else {
+    //                 user.findOne({ username: params.username }).then(
+    //                     async (udoc) => {
+    //                         if (udoc) {
+    //                             error(req, res, 'Username already exist!', null)
+    //                         } else {
+    //                             params['cdate'] = Date.now();
+    //                             params['udate'] = Date.now();
+    //                             params['password'] = await commonService.encriptPassword(req.body.password);
+    //                             var inputdata = new user(params)
+    //                             inputdata.save().then(
+    //                                 (doc: any) => {
+    //                                     success(req, res, 'Registered Successfully!', userformatter(doc));
+    //                                 }, (err: any) => {
+    //                                     error(req, res, 'Registration Failed!', err);
+    //                                 }
+    //                             )
+    //                         }
+    //                     }, err => {
+    //                         error(req, res, 'Registration Failed!', err)
+    //                     }
+    //                 )
+    //             }
+    //         }, err => {
+    //             error(req, res, 'Registration Failed!', err)
+    //         }
+    //     )
+    // } catch (err) {
+    //     error(req, res, 'Registration Failed!', err)
+    // }
 });
 const checkUserAndSave = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
     try {
@@ -63,9 +94,7 @@ const checkUserAndSave = (req, res) => __awaiter(void 0, void 0, void 0, functio
             else {
                 params['cdate'] = Date.now();
                 params['udate'] = Date.now();
-                if (req.body.password) {
-                    params['password'] = yield common_service_1.default.encriptPassword(req.body.password);
-                }
+                params['password'] = yield common_service_1.default.encriptPassword(req.body.password);
                 var inputdata = new user_schema_1.user(params);
                 inputdata.save().then((doc) => {
                     sendUserWithToken(req, res, doc, 'User Added Successfully!');
@@ -111,18 +140,6 @@ const userlogin = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
         (0, response_service_1.error)(req, res, '', err);
     }
 });
-const sendUserWithToken = (req, res, doc, message) => __awaiter(void 0, void 0, void 0, function* () {
-    let payload = {
-        email: doc.email,
-        id: doc._id,
-    };
-    let responseObj = {
-        token: yield common_service_1.default.newToken(payload),
-        user: (0, userformatter_1.userformatter)(doc)
-    };
-    console.log("res obj", responseObj);
-    (0, response_service_1.success)(req, res, message, responseObj);
-});
 const getuser = (req, res) => {
     try {
         let params = req.body;
@@ -131,6 +148,7 @@ const getuser = (req, res) => {
         params.username ? query['username'] = params.username : null;
         params.mobile ? query['mobile'] = params.mobile : null;
         params._id ? query['_id'] = new mongodb_1.ObjectId(`${params._id}`) : null;
+        params.role ? query['role'] = params.role : null;
         user_schema_1.user.findOne(query, { password: 0 }).then((doc) => {
             if (doc) {
                 (0, response_service_1.success)(req, res, "User Details", (0, userformatter_1.userformatter)(doc));
@@ -226,6 +244,7 @@ const updateuser = (req, res) => __awaiter(void 0, void 0, void 0, function* () 
         let setQuery = {};
         params.firstname ? setQuery['firstname'] = params.firstname : null;
         params.lastname ? setQuery['lastname'] = params.lastname : null;
+        params.email ? setQuery['email'] = params.email : null;
         params.username ? setQuery['username'] = params.username : null;
         params.mobile ? setQuery['mobile'] = params.mobile : null;
         params.gender ? setQuery['gender'] = params.gender : null;
@@ -235,7 +254,11 @@ const updateuser = (req, res) => __awaiter(void 0, void 0, void 0, function* () 
         params.uid ? setQuery['uid'] = params.uid : null;
         params.photo_url ? setQuery['photo_url'] = params.photo_url : null;
         params.preferred_genres ? setQuery['preferred_genres'] = params.preferred_genres : null;
-        // params.active ? setQuery['active'] = true : setQuery['active'] = false;
+        params.subscription ? setQuery['subscription'] = params.subscription : null;
+        params.terms_conditions == true ? setQuery['terms_conditions'] = true : null;
+        params.terms_conditions == false ? setQuery['terms_conditions'] = false : null;
+        params.email_verified == true ? setQuery['email_verified'] = true : null;
+        params.email_verified == false ? setQuery['email_verified'] = false : null;
         setQuery['udate'] = Date.now();
         user_schema_1.user.findOneAndUpdate(query, { $set: setQuery }).then((doc) => __awaiter(void 0, void 0, void 0, function* () {
             if (!doc) {

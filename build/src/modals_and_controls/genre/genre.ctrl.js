@@ -12,25 +12,17 @@ Object.defineProperty(exports, "__esModule", { value: true });
 const genre_schema_1 = require("./genre.schema");
 const response_service_1 = require("../../service/response.service");
 const mongodb_1 = require("mongodb");
+const error_handler_service_1 = require("src/service/error-handler.service");
 const addgenre = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
     try {
         let params = req.body;
-        genre_schema_1.genre.findOne({ name: params.name }).then((udoc) => __awaiter(void 0, void 0, void 0, function* () {
-            if (udoc) {
-                (0, response_service_1.error)(req, res, 'Genre already exist!', null);
-            }
-            else {
-                params['cdate'] = Date.now();
-                params['udate'] = Date.now();
-                var inputdata = new genre_schema_1.genre(params);
-                inputdata.save().then((doc) => {
-                    (0, response_service_1.success)(req, res, 'Genre added successfully!', doc);
-                }, (err) => {
-                    (0, response_service_1.error)(req, res, 'Genre adding failed!', err);
-                });
-            }
-        }), err => {
-            (0, response_service_1.error)(req, res, '', err);
+        params['cdate'] = Date.now();
+        params['udate'] = Date.now();
+        var inputdata = new genre_schema_1.genre(params);
+        inputdata.save().then((doc) => {
+            (0, response_service_1.success)(req, res, 'Genre added successfully!', doc);
+        }, (err) => {
+            (0, response_service_1.error)(req, res, (0, error_handler_service_1.genreErrs)(err), err);
         });
     }
     catch (err) {

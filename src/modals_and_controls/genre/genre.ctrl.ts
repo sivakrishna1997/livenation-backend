@@ -2,31 +2,21 @@ import { genre } from './genre.schema';
 import { Request, Response } from "express";
 import { success, error } from '../../service/response.service';
 import { ObjectId } from 'mongodb';
+import { genreErrs } from '../../service/error-handler.service';
 
 
 
 const addgenre = async (req: Request, res: Response) => {
     try {
         let params = req.body;
-        genre.findOne({ name: params.name }).then(
-            async (udoc) => {
-                if (udoc) {
-                    error(req, res, 'Genre already exist!', null)
-                } else {
-                    params['cdate'] = Date.now();
-                    params['udate'] = Date.now();
-
-                    var inputdata = new genre(params)
-                    inputdata.save().then(
-                        (doc: any) => {
-                            success(req, res, 'Genre added successfully!', doc);
-                        }, (err: any) => {
-                            error(req, res, 'Genre adding failed!', err);
-                        }
-                    )
-                }
-            }, err => {
-                error(req, res, '', err)
+        params['cdate'] = Date.now();
+        params['udate'] = Date.now();
+        var inputdata = new genre(params)
+        inputdata.save().then(
+            (doc: any) => {
+                success(req, res, 'Genre added successfully!', doc);
+            }, (err: any) => {
+                error(req, res, genreErrs(err), null);
             }
         )
     } catch (err) {

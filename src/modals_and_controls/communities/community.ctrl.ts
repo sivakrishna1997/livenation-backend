@@ -2,31 +2,22 @@ import { communities } from './community.schema';
 import { Request, Response } from "express";
 import { success, error } from '../../service/response.service';
 import { ObjectId } from 'mongodb';
+import { communityErrs } from '../../service/error-handler.service';
 
 
 
 const addcommunity = async (req: Request, res: Response) => {
     try {
         let params = req.body;
-        communities.findOne({ name: params.name }).then(
-            async (udoc) => {
-                if (udoc) {
-                    error(req, res, 'Community Name already exist!', null)
-                } else {
-                    params['cdate'] = Date.now();
-                    params['udate'] = Date.now();
+        params['cdate'] = Date.now();
+        params['udate'] = Date.now();
 
-                    var inputdata = new communities(params)
-                    inputdata.save().then(
-                        (doc: any) => {
-                            success(req, res, 'Community added successfully!', doc);
-                        }, (err: any) => {
-                            error(req, res, 'Community adding failed!', err);
-                        }
-                    )
-                }
-            }, err => {
-                error(req, res, '', err)
+        var inputdata = new communities(params)
+        inputdata.save().then(
+            (doc: any) => {
+                success(req, res, 'Community added successfully!', doc);
+            }, (err: any) => {
+                error(req, res, communityErrs(err), null);
             }
         )
     } catch (err) {
@@ -46,7 +37,7 @@ const getcommunity = (req: Request, res: Response) => {
                 if (doc) {
                     success(req, res, "Community Details!", doc);
                 } else {
-                    error(req, res, "Community Doesn't Exists!", "");
+                    error(req, res, "Community Doesn't Exists!", null);
                 }
             }, err => {
                 error(req, res, '', err)

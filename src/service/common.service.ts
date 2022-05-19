@@ -12,7 +12,7 @@ const newToken = async (payload: any) => {
 }
 
 const encriptPassword = (password: string) => {
-    return bcrypt.hashSync(password, salt);
+    return password && password.length > 5 ? bcrypt.hashSync(password, salt) : "abc";
 }
 
 const comparePassword = (password: string, existedPassword: string) => {

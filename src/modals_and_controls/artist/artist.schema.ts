@@ -1,7 +1,7 @@
 import * as mongoose from 'mongoose';
 
 export const artist = mongoose.model('artists', new mongoose.Schema({
-    name: { type: String, required: true, trim: true, index: true },
+    name: { type: String, required: [true, "Artist Name is required"], trim: true, index: true, unique: true },
     description: { type: String },
     photo_url: { type: String },
     social_media: {

@@ -2,6 +2,7 @@ import { plu_categories, plu_sub_categories } from './plu.schema';
 import { Request, Response } from "express";
 import { success, error } from '../../service/response.service';
 import { ObjectId } from 'mongodb';
+import { pluCategoryErrs, pluSubCategoryErrs } from '../../service/error-handler.service';
 
 
 // =================== Category start ====================== //
@@ -9,22 +10,13 @@ import { ObjectId } from 'mongodb';
 const add_category = async (req: Request, res: Response) => {
     try {
         let params = req.body;
-        plu_categories.findOne({ name: params.name }).then(
-            async (udoc) => {
-                if (udoc) {
-                    error(req, res, 'Category Name already exist!', null)
-                } else {
-                    var inputdata = new plu_categories(params)
-                    inputdata.save().then(
-                        (doc: any) => {
-                            success(req, res, 'Category added successfully!', doc);
-                        }, (err: any) => {
-                            error(req, res, 'Category adding failed!', err);
-                        }
-                    )
-                }
-            }, err => {
-                error(req, res, '', err)
+
+        var inputdata = new plu_categories(params)
+        inputdata.save().then(
+            (doc: any) => {
+                success(req, res, 'Category added successfully!', doc);
+            }, (err: any) => {
+                error(req, res, pluCategoryErrs(err), null);
             }
         )
     } catch (err) {
@@ -111,22 +103,13 @@ const delete_category = (req: Request, res: Response) => {
 const add_sub_category = async (req: Request, res: Response) => {
     try {
         let params = req.body;
-        plu_sub_categories.findOne({ name: params.name }).then(
-            async (udoc) => {
-                if (udoc) {
-                    error(req, res, 'Sub Category Name already exist!', null)
-                } else {
-                    var inputdata = new plu_sub_categories(params)
-                    inputdata.save().then(
-                        (doc: any) => {
-                            success(req, res, 'Sub Category added successfully!', doc);
-                        }, (err: any) => {
-                            error(req, res, 'Sub Category adding failed!', err);
-                        }
-                    )
-                }
-            }, err => {
-                error(req, res, '', err)
+
+        var inputdata = new plu_sub_categories(params)
+        inputdata.save().then(
+            (doc: any) => {
+                success(req, res, 'Sub Category added successfully!', doc);
+            }, (err: any) => {
+                error(req, res, pluSubCategoryErrs(err), null);
             }
         )
     } catch (err) {

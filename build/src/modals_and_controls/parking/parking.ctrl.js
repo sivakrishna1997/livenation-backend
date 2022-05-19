@@ -33,7 +33,6 @@ const getparking = (req, res) => {
         let params = req.body;
         var query = {};
         params._id ? query['_id'] = new mongodb_1.ObjectId(`${params._id}`) : null;
-        console.log("query", query);
         parking_schema_1.parking.find(query).then((doc) => {
             if (doc) {
                 (0, response_service_1.success)(req, res, "Parking details!", doc);

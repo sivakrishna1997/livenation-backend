@@ -2,6 +2,7 @@ import { plu_departments, plu_sub_departments } from './plu.schema';
 import { Request, Response } from "express";
 import { success, error } from '../../service/response.service';
 import { ObjectId } from 'mongodb';
+import { pluDepartmentErrs, pluSubDepartmentErrs } from '../../service/error-handler.service';
 
 
 // =================== Department start ====================== //
@@ -9,22 +10,13 @@ import { ObjectId } from 'mongodb';
 const add_department = async (req: Request, res: Response) => {
     try {
         let params = req.body;
-        plu_departments.findOne({ name: params.name }).then(
-            async (udoc) => {
-                if (udoc) {
-                    error(req, res, 'Department Name already exist!', null)
-                } else {
-                    var inputdata = new plu_departments(params)
-                    inputdata.save().then(
-                        (doc: any) => {
-                            success(req, res, 'Department added successfully!', doc);
-                        }, (err: any) => {
-                            error(req, res, 'Department adding failed!', err);
-                        }
-                    )
-                }
-            }, err => {
-                error(req, res, '', err)
+
+        var inputdata = new plu_departments(params)
+        inputdata.save().then(
+            (doc: any) => {
+                success(req, res, 'Department added successfully!', doc);
+            }, (err: any) => {
+                error(req, res, pluDepartmentErrs(err), null);
             }
         )
     } catch (err) {
@@ -111,22 +103,12 @@ const delete_department = (req: Request, res: Response) => {
 const add_sub_department = async (req: Request, res: Response) => {
     try {
         let params = req.body;
-        plu_sub_departments.findOne({ name: params.name }).then(
-            async (udoc) => {
-                if (udoc) {
-                    error(req, res, 'Sub Department Name already exist!', null)
-                } else {
-                    var inputdata = new plu_sub_departments(params)
-                    inputdata.save().then(
-                        (doc: any) => {
-                            success(req, res, 'Sub Department added successfully!', doc);
-                        }, (err: any) => {
-                            error(req, res, 'Sub Department adding failed!', err);
-                        }
-                    )
-                }
-            }, err => {
-                error(req, res, '', err)
+        var inputdata = new plu_sub_departments(params)
+        inputdata.save().then(
+            (doc: any) => {
+                success(req, res, 'Sub Department added successfully!', doc);
+            }, (err: any) => {
+                error(req, res, pluSubDepartmentErrs(err), null);
             }
         )
     } catch (err) {

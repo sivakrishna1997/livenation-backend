@@ -1,7 +1,7 @@
 import * as mongoose from 'mongoose';
 
 export const parking = mongoose.model('parkings', new mongoose.Schema({
-    name: { type: String, trim: true },
+    name: { type: String, trim: true, required: [true, "Parking Name is required"] },
     image: { type: String },
     location: { type: String },
     description: { type: String },
