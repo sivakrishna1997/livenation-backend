@@ -9,7 +9,8 @@
     "dev": "ts-node-dev --respawn --pretty --transpile-only src/index.ts",
     "test": "echo \"Error: no test specified\" && exit 1",
     "build": "tsc --project ./",
-    "build:start": "node build/src/index.js"
+    "build:start": "node build/src/index.js",
+    "pm2": "pm2 startOrRestart build/src/index.js"
   },
   "keywords": [],
   "author": "sivakrishna",
