@@ -18,7 +18,7 @@ const response_service_1 = require("../../service/response.service");
 const mongodb_1 = require("mongodb");
 const userformatter_1 = require("./userformatter");
 const common_service_1 = __importDefault(require("../../service/common.service"));
-const error_handler_service_1 = require("src/service/error-handler.service");
+const error_handler_service_1 = require("../../service/error-handler.service");
 const sendUserWithToken = (req, res, doc, message) => __awaiter(void 0, void 0, void 0, function* () {
     let payload = {
         email: doc.email,

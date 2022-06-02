@@ -12,7 +12,7 @@ Object.defineProperty(exports, "__esModule", { value: true });
 const plu_schema_1 = require("./plu.schema");
 const response_service_1 = require("../../service/response.service");
 const mongodb_1 = require("mongodb");
-const error_handler_service_1 = require("src/service/error-handler.service");
+const error_handler_service_1 = require("../../service/error-handler.service");
 // =================== Department start ====================== //
 const add_department = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
     try {
@@ -21,7 +21,7 @@ const add_department = (req, res) => __awaiter(void 0, void 0, void 0, function*
         inputdata.save().then((doc) => {
             (0, response_service_1.success)(req, res, 'Department added successfully!', doc);
         }, (err) => {
-            (0, response_service_1.error)(req, res, (0, error_handler_service_1.pluDepartmentErrs)(err), err);
+            (0, response_service_1.error)(req, res, (0, error_handler_service_1.pluDepartmentErrs)(err), null);
         });
     }
     catch (err) {
@@ -101,7 +101,7 @@ const add_sub_department = (req, res) => __awaiter(void 0, void 0, void 0, funct
         inputdata.save().then((doc) => {
             (0, response_service_1.success)(req, res, 'Sub Department added successfully!', doc);
         }, (err) => {
-            (0, response_service_1.error)(req, res, (0, error_handler_service_1.pluSubDepartmentErrs)(err), err);
+            (0, response_service_1.error)(req, res, (0, error_handler_service_1.pluSubDepartmentErrs)(err), null);
         });
     }
     catch (err) {

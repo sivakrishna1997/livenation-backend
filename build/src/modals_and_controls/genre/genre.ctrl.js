@@ -12,7 +12,7 @@ Object.defineProperty(exports, "__esModule", { value: true });
 const genre_schema_1 = require("./genre.schema");
 const response_service_1 = require("../../service/response.service");
 const mongodb_1 = require("mongodb");
-const error_handler_service_1 = require("src/service/error-handler.service");
+const error_handler_service_1 = require("../../service/error-handler.service");
 const addgenre = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
     try {
         let params = req.body;
@@ -22,7 +22,7 @@ const addgenre = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
         inputdata.save().then((doc) => {
             (0, response_service_1.success)(req, res, 'Genre added successfully!', doc);
         }, (err) => {
-            (0, response_service_1.error)(req, res, (0, error_handler_service_1.genreErrs)(err), err);
+            (0, response_service_1.error)(req, res, (0, error_handler_service_1.genreErrs)(err), null);
         });
     }
     catch (err) {

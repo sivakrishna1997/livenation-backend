@@ -10,7 +10,7 @@ import passportstrategy from './service/passport.service';
 import mongodb from './service/mongoose.service'
 import router from "./routes";
 import fileuploadroutes from './fileuploadroutes';
-
+import morgan from 'morgan';
 
 if (!process.env.PORT) {
     process.exit(1);
@@ -20,6 +20,7 @@ const PORT: number = parseInt(process.env.PORT as string, 10);
 const app = express();
 mongodb();
 
+app.use(morgan('dev'));
 app.use(helmet({ contentSecurityPolicy: false }));
 app.use(cors());
 // app.use(cors(

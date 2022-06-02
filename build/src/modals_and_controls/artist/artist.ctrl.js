@@ -12,7 +12,7 @@ Object.defineProperty(exports, "__esModule", { value: true });
 const artist_schema_1 = require("./artist.schema");
 const response_service_1 = require("../../service/response.service");
 const mongodb_1 = require("mongodb");
-const error_handler_service_1 = require("src/service/error-handler.service");
+const error_handler_service_1 = require("../../service/error-handler.service");
 const addartist = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
     try {
         let params = req.body;
@@ -64,25 +64,29 @@ const getartist_with_eventcount = (req, res) => {
                 $lookup: {
                     from: "events",
                     let: { artist_id: "$_id" },
-                    pipeline: [
-                        {
+                    pipeline: [{
                             $match: {
-                                performers: {
-                                    $elemMatch: {
-                                        artist_id: "$$artist_id",
-                                    },
-                                },
-                            },
-                        }
-                    ],
-                    // pipeline: [{
-                    //     $match: {
-                    //         $expr: { $in: ["$$artist_id", "$performers.artist_id"] }
-                    //     }
-                    // }],
-                    as: "matches"
+                                $expr: {
+                                    $or: [
+                                        { $in: ["$$artist_id", "$performers"] },
+                                        { $eq: ["$$artist_id", "$main_artist"] },
+                                    ]
+                                }
+                            }
+                        }],
+                    as: "participated_events"
                 }
             },
+            {
+                "$addFields": {
+                    "participated_events_count": { $size: "$participated_events" }
+                }
+            },
+            {
+                $project: {
+                    participated_events: 0
+                }
+            }
         ]).then((doc) => {
             if (doc) {
                 (0, response_service_1.success)(req, res, "Artist details!", doc);
@@ -93,48 +97,6 @@ const getartist_with_eventcount = (req, res) => {
         }, err => {
             (0, response_service_1.error)(req, res, '', err);
         });
-        // artist.aggregate([
-        //     {
-        //         $lookup: {
-        //             from: "events",
-        //             let: { artist_id: '$_id' },
-        //             pipeline: [
-        //                 // {
-        //                 //     $match: {
-        //                 //         performers: {
-        //                 //             $elemMatch: {
-        //                 //                 artist_name: "$$artist_name",
-        //                 //             },
-        //                 //         },
-        //                 //     }
-        //                 // },
-        //                 {
-        //                     $match: {
-        //                         $in: [{
-        //                             artist_id: '$$artist_id'
-        //                         }, "$performers"] // actual array value is [{ b: 123, a: "ABC" }, { a: 234, b: "BCD" }]
-        //                     }
-        //                 },
-        //                 // {
-        //                 //     $match: {
-        //                 //         $expr: { $eq: ["$$artist_id", "$performers.artist_id"] }
-        //                 //     }
-        //                 // },
-        //                 { $project: { _id: 0 } }
-        //             ],
-        //             as: "artist_with_events"
-        //         }
-        //     }
-        // ]).then(
-        //     (doc: any) => {
-        //         if (doc) {
-        //             success(req, res, "Artist details!", doc);
-        //         } else {
-        //             error(req, res, "Artist doesn't exists!", "");
-        //         }
-        //     }, err => {
-        //         error(req, res, '', err)
-        //     })
     }
     catch (err) {
         (0, response_service_1.error)(req, res, '', err);

@@ -147,3 +147,25 @@ export const pluMasterErrs = (error: any): string => {
     }
     return err_msg;
 }
+
+
+export const inventoryPurposeErrs = (error: any): string => {
+    let err_msg = '';
+    if (error.keyValue?.name != null && error.name === "MongoError" && error.code === 11000) {
+        err_msg = "Purpose Name already exist";
+    } else {
+        err_msg = error.message;
+    }
+    return err_msg;
+}
+
+export const inventoryErrs = (error: any): string => {
+    debugger
+    let err_msg = '';
+    if (error.keyValue?.incomming_number != null && error.name === "MongoError" && error.code === 11000) {
+        err_msg = "Inventory incomming number already exist";
+    } else {
+        err_msg = error.message;
+    }
+    return err_msg;
+}
