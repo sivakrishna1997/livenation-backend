@@ -27,15 +27,17 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
 };
 Object.defineProperty(exports, "__esModule", { value: true });
 const express = __importStar(require("express"));
-const user_ctrl_1 = __importDefault(require("./user.ctrl"));
-const root = express.Router();
-root.post('/register', user_ctrl_1.default.adduser);
-root.post('/login', user_ctrl_1.default.userlogin);
-root.post('/get', user_ctrl_1.default.getuser);
-root.get('/getall', user_ctrl_1.default.getallusers);
-root.post('/delete', user_ctrl_1.default.deleteuser);
-root.post('/update', user_ctrl_1.default.updateuser);
-root.post('/updatepassword', user_ctrl_1.default.updatepassword);
-root.post('/check-user-and-save', user_ctrl_1.default.checkUserAndSave);
-exports.default = root;
-//# sourceMappingURL=user.router.js.map
+const inventory = express.Router();
+const inventory_ctrl_1 = __importDefault(require("./inventory.ctrl"));
+//Inventory
+inventory.post('/add', inventory_ctrl_1.default.add_inventory);
+inventory.post('/get', inventory_ctrl_1.default.get_inventory);
+inventory.post('/update', inventory_ctrl_1.default.update_inventory);
+inventory.post('/delete', inventory_ctrl_1.default.delete_inventory);
+//Inventory Purpose
+inventory.post('/purpose/add', inventory_ctrl_1.default.add_inventory_purpose);
+inventory.post('/purpose/get', inventory_ctrl_1.default.get_inventory_purpose);
+inventory.post('/purpose/update', inventory_ctrl_1.default.update_inventory_purpose);
+inventory.post('/purpose/delete', inventory_ctrl_1.default.delete_inventory_purpose);
+exports.default = inventory;
+//# sourceMappingURL=inventory.router.js.map

@@ -1,7 +1,11 @@
 "use strict";
 var __createBinding = (this && this.__createBinding) || (Object.create ? (function(o, m, k, k2) {
     if (k2 === undefined) k2 = k;
-    Object.defineProperty(o, k2, { enumerable: true, get: function() { return m[k]; } });
+    var desc = Object.getOwnPropertyDescriptor(m, k);
+    if (!desc || ("get" in desc ? !m.__esModule : desc.writable || desc.configurable)) {
+      desc = { enumerable: true, get: function() { return m[k]; } };
+    }
+    Object.defineProperty(o, k2, desc);
 }) : (function(o, m, k, k2) {
     if (k2 === undefined) k2 = k;
     o[k2] = m[k];
@@ -34,12 +38,14 @@ const passport_service_1 = __importDefault(require("./service/passport.service")
 const mongoose_service_1 = __importDefault(require("./service/mongoose.service"));
 const routes_1 = __importDefault(require("./routes"));
 const fileuploadroutes_1 = __importDefault(require("./fileuploadroutes"));
+const morgan_1 = __importDefault(require("morgan"));
 if (!process.env.PORT) {
     process.exit(1);
 }
 const PORT = parseInt(process.env.PORT, 10);
 const app = (0, express_1.default)();
 (0, mongoose_service_1.default)();
+app.use((0, morgan_1.default)('dev'));
 app.use((0, helmet_1.default)({ contentSecurityPolicy: false }));
 app.use((0, cors_1.default)());
 // app.use(cors(

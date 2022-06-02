@@ -12,7 +12,7 @@ Object.defineProperty(exports, "__esModule", { value: true });
 const community_schema_1 = require("./community.schema");
 const response_service_1 = require("../../service/response.service");
 const mongodb_1 = require("mongodb");
-const error_handler_service_1 = require("src/service/error-handler.service");
+const error_handler_service_1 = require("../../service/error-handler.service");
 const addcommunity = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
     try {
         let params = req.body;
@@ -22,7 +22,7 @@ const addcommunity = (req, res) => __awaiter(void 0, void 0, void 0, function* (
         inputdata.save().then((doc) => {
             (0, response_service_1.success)(req, res, 'Community added successfully!', doc);
         }, (err) => {
-            (0, response_service_1.error)(req, res, (0, error_handler_service_1.communityErrs)(err), err);
+            (0, response_service_1.error)(req, res, (0, error_handler_service_1.communityErrs)(err), null);
         });
     }
     catch (err) {
@@ -40,7 +40,7 @@ const getcommunity = (req, res) => {
                 (0, response_service_1.success)(req, res, "Community Details!", doc);
             }
             else {
-                (0, response_service_1.error)(req, res, "Community Doesn't Exists!", "");
+                (0, response_service_1.error)(req, res, "Community Doesn't Exists!", null);
             }
         }, err => {
             (0, response_service_1.error)(req, res, '', err);

@@ -1,6 +1,6 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.pluMasterErrs = exports.pluSubDepartmentErrs = exports.pluDepartmentErrs = exports.pluSubCategoryErrs = exports.pluCategoryErrs = exports.pluBrandErrs = exports.pluSizeErrs = exports.pluColorErrs = exports.stageErrs = exports.venueErrs = exports.genreErrs = exports.communityErrs = exports.artistErrs = exports.userErrs = void 0;
+exports.inventoryErrs = exports.inventoryPurposeErrs = exports.pluMasterErrs = exports.pluSubDepartmentErrs = exports.pluDepartmentErrs = exports.pluSubCategoryErrs = exports.pluCategoryErrs = exports.pluBrandErrs = exports.pluSizeErrs = exports.pluColorErrs = exports.stageErrs = exports.venueErrs = exports.genreErrs = exports.communityErrs = exports.artistErrs = exports.userErrs = void 0;
 const userErrs = (error) => {
     var _a, _b, _c;
     let err_msg = '';
@@ -56,9 +56,8 @@ const genreErrs = (error) => {
 };
 exports.genreErrs = genreErrs;
 const venueErrs = (error) => {
-    var _a;
     let err_msg = '';
-    if (((_a = error.keyValue) === null || _a === void 0 ? void 0 : _a.name) != null && error.name === "MongoError" && error.code === 11000) {
+    if (error.keyValue.name != null && error.name === "MongoError" && error.code === 11000) {
         err_msg = "Venue Name already exist";
     }
     else {
@@ -175,4 +174,29 @@ const pluMasterErrs = (error) => {
     return err_msg;
 };
 exports.pluMasterErrs = pluMasterErrs;
+const inventoryPurposeErrs = (error) => {
+    var _a;
+    let err_msg = '';
+    if (((_a = error.keyValue) === null || _a === void 0 ? void 0 : _a.name) != null && error.name === "MongoError" && error.code === 11000) {
+        err_msg = "Purpose Name already exist";
+    }
+    else {
+        err_msg = error.message;
+    }
+    return err_msg;
+};
+exports.inventoryPurposeErrs = inventoryPurposeErrs;
+const inventoryErrs = (error) => {
+    var _a;
+    debugger;
+    let err_msg = '';
+    if (((_a = error.keyValue) === null || _a === void 0 ? void 0 : _a.incomming_number) != null && error.name === "MongoError" && error.code === 11000) {
+        err_msg = "Inventory incomming number already exist";
+    }
+    else {
+        err_msg = error.message;
+    }
+    return err_msg;
+};
+exports.inventoryErrs = inventoryErrs;
 //# sourceMappingURL=error-handler.service.js.map

@@ -76,17 +76,17 @@ const getartist_with_eventcount = (req: Request, res: Response) => {
                             }
                         }
                     }],
-                    as: "paeticipated_events"
+                    as: "participated_events"
                 }
             },
             {
                 "$addFields": {
-                    "participated_events_count": { $size: "$paeticipated_events" }
+                    "participated_events_count": { $size: "$participated_events" }
                 }
             },
             {
                 $project: {
-                    paeticipated_events: 0
+                    participated_events: 0
                 }
             }
         ]).then(

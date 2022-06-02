@@ -12,7 +12,7 @@ Object.defineProperty(exports, "__esModule", { value: true });
 const venue_schema_1 = require("./venue.schema");
 const response_service_1 = require("../../service/response.service");
 const mongodb_1 = require("mongodb");
-const error_handler_service_1 = require("src/service/error-handler.service");
+const error_handler_service_1 = require("../../service/error-handler.service");
 // =================== venue ====================== //
 const addvenue = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
     try {
@@ -23,7 +23,7 @@ const addvenue = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
         inputdata.save().then((doc) => {
             (0, response_service_1.success)(req, res, 'Venue added successfully!', doc);
         }, (err) => {
-            (0, response_service_1.error)(req, res, (0, error_handler_service_1.venueErrs)(err), err);
+            (0, response_service_1.error)(req, res, (0, error_handler_service_1.venueErrs)(err), null);
         });
     }
     catch (err) {
@@ -114,7 +114,7 @@ const addstages = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
         inputdata.save().then((doc) => {
             (0, response_service_1.success)(req, res, 'Stage added successfully!', doc);
         }, (err) => {
-            (0, response_service_1.error)(req, res, (0, error_handler_service_1.stageErrs)(err), err);
+            (0, response_service_1.error)(req, res, (0, error_handler_service_1.stageErrs)(err), null);
         });
     }
     catch (err) {
