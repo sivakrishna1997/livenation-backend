@@ -17,7 +17,7 @@
   "license": "ISC",
   "dependencies": {
     "@types/express-fileupload": "^1.2.2",
-    "@types/mongoose": "^5.0.0",
+    "@types/mongoose": "^5.11.97",
     "@types/paypal-rest-sdk": "^1.7.6",
     "bcryptjs": "^2.4.3",
     "cloudinary": "^1.27.0",
@@ -27,7 +27,7 @@
     "express-fileupload": "^1.2.1",
     "helmet": "^5.0.1",
     "jsonwebtoken": "^8.5.1",
-    "mongoose": "^5.0.0",
+    "mongoose": "^5.13.5",
     "morgan": "^1.10.0",
     "passport": "^0.4.1",
     "passport-jwt": "^4.0.0",
