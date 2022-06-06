@@ -1,4 +1,6 @@
 import mongoose from 'mongoose';
+import * as dotenv from "dotenv";
+dotenv.config();
 
 export default function mongodb() {
     const options: mongoose.ConnectOptions = {
@@ -9,8 +11,7 @@ export default function mongodb() {
         useFindAndModify: true,
         useCreateIndex: true,
     }
-    let url = "mongodb://localhost:27017/livenation";
-    // let url = "mongodb+srv://tal:tal@cluster0.jmvgw.mongodb.net/livenation";
+    let url: any = process.env.MONGODB_URI;
     mongoose.connect(url, options).then(
         response => {
             console.log('DB connected! "livenation"')
